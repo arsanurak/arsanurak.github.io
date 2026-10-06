@@ -30,24 +30,6 @@ export const profile = {
   credentials: ["CCNP", "CCNA", "B.Eng. in Computer Engineering (Naresuan University)"],
 };
 
-export interface CaseStudyCard {
-  order: number;
-  title: string;
-  summary: string;
-  // Set once the case study has its own page.
-  href?: string;
-}
-
-// Case studies without a page yet. Published ones come from the case-study
-// content collection and replace these.
-export const upcomingCaseStudies: CaseStudyCard[] = [
-  {
-    order: 3,
-    title: "Running infrastructure work through AI agents: decisions by me, execution by the agent",
-    summary: "Grilling sessions and ADRs for the decisions, ready-for-agent tickets for the work, guardrail hooks, and a reviewed PR for every change.",
-  },
-];
-
 export interface OtherWork {
   title: string;
   description: string;

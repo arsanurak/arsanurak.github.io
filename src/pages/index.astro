@@ -1,16 +1,12 @@
 ---
 import { getCollection } from "astro:content";
 import WithProfile from "../layouts/WithProfile.astro";
-import { otherWork, profile, roles, upcomingCaseStudies, type CaseStudyCard } from "../data/profile";
+import { otherWork, profile, roles } from "../data/profile";
 import { caseStudyPath } from "../lib/case-study-slugs";
 
-const published: CaseStudyCard[] = (await getCollection("caseStudies")).map(({ data }) => ({
-  order: data.order,
-  title: data.title,
-  summary: data.summary,
-  href: caseStudyPath(data.slug),
-}));
-const caseStudies = [...published, ...upcomingCaseStudies].sort((a, b) => a.order - b.order);
+const caseStudies = (await getCollection("caseStudies"))
+  .map(({ data }) => data)
+  .sort((a, b) => a.order - b.order);
 ---
 
 <WithProfile title={`${profile.name} · ${profile.headline}`} description={profile.tagline}>
@@ -32,7 +28,7 @@ const caseStudies = [...published, ...upcomingCaseStudies].sort((a, b) => a.orde
                   {caseStudies.map((study) => (
                     <li>
                       <p class="label kicker">Case study</p>
-                      <p class="title">{study.href ? <a href={study.href}>{study.title}</a> : study.title}</p>
+                      <p class="title"><a href={caseStudyPath(study.slug)}>{study.title}</a></p>
                       <p class="summary">{study.summary}</p>
                     </li>
                   ))}
