@@ -62,6 +62,7 @@ if (sections.join("|") !== SHAPE.join("|")) {
 
     <div class="prose">
       <Content />
+      <p class="code-link"><a href={data.code}>Browse the code in {data.code.replace(/^https:\/\/github\.com\//, "")} →</a></p>
     </div>
   </article>
 </WithProfile>
@@ -175,6 +176,19 @@ if (sections.join("|") !== SHAPE.join("|")) {
     font: 13px/1.5 var(--font-mono);
     color: var(--muted);
     margin-top: 12px;
+  }
+
+  .code-link a {
+    display: inline-block;
+    font: 14px/1.4 var(--font-mono);
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    text-decoration: none;
+  }
+
+  .code-link a:hover {
+    border-color: var(--accent);
   }
 
   .prose :global(blockquote) {

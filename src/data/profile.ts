@@ -42,11 +42,6 @@ export interface CaseStudyCard {
 // content collection and replace these.
 export const upcomingCaseStudies: CaseStudyCard[] = [
   {
-    order: 2,
-    title: "A CI pipeline that can't loosen its own guardrails",
-    summary: "OIDC instead of stored keys, a permission boundary the pipeline can't edit, and AWS IAM limits found by testing.",
-  },
-  {
     order: 3,
     title: "Running infrastructure work through AI agents: decisions by me, execution by the agent",
     summary: "Grilling sessions and ADRs for the decisions, ready-for-agent tickets for the work, guardrail hooks, and a reviewed PR for every change.",
