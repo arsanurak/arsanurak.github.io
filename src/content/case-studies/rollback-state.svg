@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 250" width="640" height="250" role="img" aria-labelledby="title">
+  <title id="title">After cutover: the new platform serves traffic; the old platform keeps every workload at zero replicas with its disks, so routing can move back.</title>
+  <style>
+    .ink { fill: #14202b; }
+    .muted { fill: #5b6875; }
+    .accent { fill: #0d6e7a; }
+    .box { fill: none; stroke: #d9dee3; stroke-width: 1.5; }
+    .box.live { fill: #e6f0f1; stroke: #0d6e7a; }
+    .box.idle { stroke-dasharray: 6 4; }
+    .disk { fill: none; stroke: #5b6875; stroke-width: 1.2; }
+    .edge { fill: none; stroke: #0d6e7a; stroke-width: 1.8; }
+    .edge.back { stroke: #5b6875; stroke-dasharray: 5 4; }
+    .head { fill: #0d6e7a; }
+    .head.back { fill: #5b6875; }
+    text { font-family: "IBM Plex Sans", system-ui, sans-serif; font-size: 14px; }
+    .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; }
+    .title { font-weight: 600; font-size: 15px; }
+    @media (prefers-color-scheme: dark) {
+      .ink { fill: #e4e9ee; }
+      .muted { fill: #93a0ac; }
+      .accent { fill: #4fb6c2; }
+      .box { stroke: #26323c; }
+      .box.live { fill: #14262b; stroke: #4fb6c2; }
+      .disk { stroke: #93a0ac; }
+      .edge { stroke: #4fb6c2; }
+      .edge.back { stroke: #93a0ac; }
+      .head { fill: #4fb6c2; }
+      .head.back { fill: #93a0ac; }
+    }
+  </style>
+
+  <!-- Routing -->
+  <rect class="box" x="250" y="10" width="140" height="40" rx="3" />
+  <text class="ink title" x="320" y="35" text-anchor="middle">Routing</text>
+
+  <!-- Live route to the new platform -->
+  <path class="edge" d="M 360 50 L 470 108" />
+  <polygon class="head" points="476,112 463,111 470,100" />
+  <text class="accent mono" x="440" y="70">live</text>
+
+  <!-- Rollback route to the old platform -->
+  <path class="edge back" d="M 280 50 L 170 108" />
+  <polygon class="head back" points="164,112 170,100 177,111" />
+  <text class="muted mono" x="118" y="70">rollback</text>
+
+  <!-- Old platform -->
+  <rect class="box idle" x="20" y="115" width="280" height="120" rx="3" />
+  <text class="ink title" x="36" y="140">Old platform</text>
+  <text class="muted mono" x="36" y="164">every service: 0 replicas</text>
+  <text class="muted mono" x="36" y="184">manifests kept in Git</text>
+  <g transform="translate(36 198)">
+    <ellipse class="disk" cx="10" cy="4" rx="10" ry="4" />
+    <path class="disk" d="M 0 4 V 20 A 10 4 0 0 0 20 20 V 4" />
+    <ellipse class="disk" cx="38" cy="4" rx="10" ry="4" />
+    <path class="disk" d="M 28 4 V 20 A 10 4 0 0 0 48 20 V 4" />
+    <text class="muted mono" x="60" y="18">disks kept</text>
+  </g>
+
+  <!-- New platform -->
+  <rect class="box live" x="340" y="115" width="280" height="120" rx="3" />
+  <text class="ink title" x="356" y="140">New platform</text>
+  <text class="ink mono" x="356" y="164">every service: running</text>
+  <text class="ink mono" x="356" y="184">parity check passed</text>
+  <text class="accent mono" x="356" y="214">serving traffic</text>
+</svg>

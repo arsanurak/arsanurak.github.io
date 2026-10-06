@@ -31,23 +31,25 @@ export const profile = {
 };
 
 export interface CaseStudyCard {
+  order: number;
   title: string;
-  hook: string;
+  summary: string;
+  // Set once the case study has its own page.
+  href?: string;
 }
 
-// Placeholders until each case study has its own page.
-export const caseStudies: CaseStudyCard[] = [
+// Case studies without a page yet. Published ones come from the case-study
+// content collection and replace these.
+export const upcomingCaseStudies: CaseStudyCard[] = [
   {
-    title: "Moving about a hundred services between Kubernetes platforms without a big bang",
-    hook: "Waves ordered by dependencies, an HTTP parity checker before every cutover, and the old platform kept ready for rollback.",
-  },
-  {
+    order: 2,
     title: "A CI pipeline that can't loosen its own guardrails",
-    hook: "OIDC instead of stored keys, a permission boundary the pipeline can't edit, and AWS IAM limits found by testing.",
+    summary: "OIDC instead of stored keys, a permission boundary the pipeline can't edit, and AWS IAM limits found by testing.",
   },
   {
+    order: 3,
     title: "Running infrastructure work through AI agents: decisions by me, execution by the agent",
-    hook: "Grilling sessions and ADRs for the decisions, ready-for-agent tickets for the work, guardrail hooks, and a reviewed PR for every change.",
+    summary: "Grilling sessions and ADRs for the decisions, ready-for-agent tickets for the work, guardrail hooks, and a reviewed PR for every change.",
   },
 ];
 

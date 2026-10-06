@@ -1,5 +1,8 @@
 /* Colour and type tokens: defined once here and reused everywhere.
-   Light is the default; dark follows the visitor's system theme. */
+   Light is the default; dark follows the visitor's system theme.
+   Exception: hand-made diagram SVGs next to a case study load as <img>, so
+   they can't read these variables and repeat the hex values. Update them too
+   when a colour changes. */
 :root {
   color-scheme: light dark;
 
@@ -20,6 +23,13 @@
   --panel-muted: #9fb0bd;
   --panel-accent: #5fc3cf;
   --panel-line: #2c3c49;
+
+  /* Diagram colours (Mermaid SVGs). Aliases, because the renderer defines
+     --line, --accent and --muted on the SVG itself. */
+  --diagram-line: var(--muted);
+  --diagram-accent: var(--accent);
+  --diagram-muted: var(--muted);
+  --diagram-border: var(--line);
 }
 
 @media (prefers-color-scheme: dark) {
