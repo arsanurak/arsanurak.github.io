@@ -1,0 +1,38 @@
+---
+import { demoRepo } from "../data/profile";
+---
+
+<footer>
+  <ul>
+    <li><a href="/how-this-site-is-built/">How this site is built</a></li>
+    <li><a href={demoRepo.href}>Demo code: {demoRepo.label}</a></li>
+  </ul>
+  <p>No JavaScript, no cookies, no tracking.</p>
+</footer>
+
+<style>
+  /* --measure and --gutter come from the page layout. */
+  footer {
+    margin: 0 var(--gutter);
+    max-width: calc(var(--measure) - 2 * var(--gutter));
+    padding: 24px 0 32px;
+    border-top: 1px solid var(--line);
+    display: grid;
+    gap: 8px;
+    font: 13px/1.5 var(--font-mono);
+    color: var(--muted);
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 24px;
+  }
+
+  p {
+    margin: 0;
+  }
+</style>

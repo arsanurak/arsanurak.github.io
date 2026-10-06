@@ -1,7 +1,8 @@
 ---
-// The page shell: profile column beside the main content on desktop,
-// stacked on top on phones.
+// The page shell: profile column beside the main content and footer on
+// desktop, stacked on top on phones.
 import Base from "./Base.astro";
+import Footer from "../components/Footer.astro";
 import Profile from "../components/Profile.astro";
 
 interface Props {
@@ -15,34 +16,48 @@ const { title, description } = Astro.props;
 <Base title={title} description={description}>
   <div class="layout">
     <Profile />
-    <main>
-      <slot />
-    </main>
+    <div class="column">
+      <main>
+        <slot />
+      </main>
+      <Footer />
+    </div>
   </div>
 </Base>
 
 <style>
+  /* The main column's width and side gutter, shared with the footer. */
   .layout {
+    --measure: 752px;
+    --gutter: 16px;
     display: grid;
     min-height: 100vh;
   }
 
+  .column {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: 16px;
+    min-width: 0;
+  }
+
   main {
-    padding: 40px 16px 24px;
+    padding: 40px var(--gutter) 24px;
     display: grid;
     gap: 40px;
     align-content: start;
-    max-width: 752px;
+    max-width: var(--measure);
     min-width: 0;
   }
 
   @media (min-width: 820px) {
     .layout {
+      --gutter: 48px;
       grid-template-columns: minmax(280px, 360px) 1fr;
     }
 
     main {
-      padding: 48px;
+      padding: 48px var(--gutter);
     }
   }
 </style>

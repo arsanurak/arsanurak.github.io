@@ -1,0 +1,86 @@
+---
+// Describes the pipeline as it is today. Only state what is true of the
+// merged pipeline: when a check, deploy step or dependency bot lands, add it
+// here in the same change.
+import WithProfile from "../layouts/WithProfile.astro";
+import { demoRepo, profile } from "../data/profile";
+---
+
+<WithProfile
+  title={`How this site is built · ${profile.name}`}
+  description="How this site is built: Astro, zero JavaScript, no cookies or tracking, and a hardened, SHA-pinned CI pipeline."
+>
+  <article class="page">
+    <a class="back" href="/#work">← Back to timeline</a>
+
+    <header>
+      <p class="eyebrow">About this site</p>
+      <h1 class="page-title">How this site is built</h1>
+    </header>
+
+    <div class="prose">
+      <p>
+        This site is small on purpose, and its build pipeline gets the same care as the infrastructure work it
+        describes. Everything on this page is true of the pipeline today. When the pipeline changes, so does this page.
+      </p>
+
+      <h2>No JavaScript, no cookies, no tracking</h2>
+      <p>
+        Every page is plain HTML and CSS. There is no analytics script, no tracking pixel and no cookie banner, because
+        there is nothing to consent to. The fonts (IBM Plex Sans and Mono) are served from this site, so reading a page
+        makes no requests to anyone else. The colours follow your system's light or dark theme.
+      </p>
+
+      <h2>How the content is built</h2>
+      <ul>
+        <li>
+          <a href="https://astro.build">Astro</a> renders every page to static HTML at build time.
+        </li>
+        <li>
+          Case studies are Markdown files with frontmatter checked against a schema. A missing, invalid or unknown field
+          fails the build, and so does a case study whose sections differ from the fixed nine-part shape.
+        </li>
+        <li>
+          Diagrams are written as Mermaid inside the Markdown and rendered to inline SVG at build time, so no diagram
+          library reaches the browser. Where Mermaid looks too generic, a hand-drawn SVG sits next to the text. A
+          diagram without alt text fails the build.
+        </li>
+        <li>
+          Case-study URLs are permanent. A committed registry lists every published slug, and renaming or removing one
+          fails the checks.
+        </li>
+      </ul>
+
+      <h2>Checks on every change</h2>
+      <p>
+        One command, <code>npm run check</code>, runs the same checks on a laptop and in CI, on every pull request and
+        every push to <code>main</code>:
+      </p>
+      <ol>
+        <li>Typecheck the whole project.</li>
+        <li>Unit-test the check scripts and the diagram plugin.</li>
+        <li>Build the site, which runs the schema and section-shape checks.</li>
+        <li>Validate the HTML of every built page.</li>
+        <li>Fail on any <code>&lt;script&gt;</code> element, in a page or an SVG, and on any JavaScript file in the output.</li>
+        <li>Check the site's text colour pairs against WCAG AA contrast, in both themes.</li>
+        <li>Check that every registered case-study slug still has a page, and every page is registered.</li>
+      </ol>
+      <p>Checks 4 to 7 run against the built site, the same files a visitor gets, not against the source.</p>
+
+      <h2>The pipeline itself</h2>
+      <ul>
+        <li>Every GitHub Action is pinned to a full commit SHA, with the version in a comment, so a moved tag can't change what runs.</li>
+        <li>The workflow token is read-only, and the checkout step doesn't keep its credentials.</li>
+        <li>The Node major version is pinned in one file that both local tooling and CI read.</li>
+        <li>Every direct npm dependency is pinned to an exact version, and CI installs from the lockfile.</li>
+        <li>A newer push to the same branch cancels the older run, and every run has a time limit.</li>
+      </ul>
+
+      <h2>See it in code</h2>
+      <p>
+        The case studies on this site describe patterns from real work. The concepts are rebuilt as generic, runnable
+        code in <a href={demoRepo.href}>{demoRepo.label}</a>.
+      </p>
+    </div>
+  </article>
+</WithProfile>

@@ -2,6 +2,16 @@
 // Content rules: employers by sector and location only, no phone number,
 // rounded relative figures only, "I" for my decisions, "the team" for shared work.
 
+export interface Link {
+  href: string;
+  label: string;
+}
+
+const linkedin: Link = {
+  href: "https://www.linkedin.com/in/anurak-chatree-01a626136",
+  label: "linkedin.com/in/anurak-chatree-01a626136",
+};
+
 export const profile = {
   name: "Anurak Chatree (Ars)",
   headline: "Senior Platform & DevOps Engineer",
@@ -10,10 +20,7 @@ export const profile = {
     "Since 2022 I've built and run production Kubernetes platforms: AWS EKS and Linode LKE, delivered through GitOps with Argo CD, with every major infrastructure choice recorded as an Architecture Decision Record. Before Kubernetes I spent over a decade designing Cisco networks, so service mesh, ingress, DNS and VPN problems are where I'm most useful. I've led small infrastructure teams, own disaster recovery planning, and use AI coding agents for incident diagnosis and PR review.",
   location: "Chiang Mai, Thailand (UTC+7) · Remote, or hybrid in Bangkok",
   email: "ars.astore@gmail.com",
-  linkedin: {
-    href: "https://www.linkedin.com/in/anurak-chatree-01a626136",
-    label: "linkedin.com/in/anurak-chatree-01a626136",
-  },
+  linkedin,
   skills: [
     "Kubernetes",
     "AWS EKS",
@@ -91,3 +98,9 @@ export const roles: Role[] = [
     title: "Network and systems engineering roles",
   },
 ];
+
+// The public Demo repo: the case-study concepts rebuilt as generic, runnable code.
+export const demoRepo: Link = {
+  href: "https://github.com/arsanurak/platform-demo",
+  label: "arsanurak/platform-demo",
+};

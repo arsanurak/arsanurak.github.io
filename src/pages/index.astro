@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import WithProfile from "../layouts/WithProfile.astro";
-import { otherWork, profile, roles } from "../data/profile";
+import { demoRepo, otherWork, profile, roles } from "../data/profile";
 import { caseStudyPath } from "../lib/case-study-slugs";
 
 const caseStudies = (await getCollection("caseStudies"))
@@ -33,6 +33,10 @@ const caseStudies = (await getCollection("caseStudies"))
                     </li>
                   ))}
                 </ul>
+                <p class="demo">
+                  The concepts behind these case studies, rebuilt as generic, runnable code:{" "}
+                  <a href={demoRepo.href}>{demoRepo.label}</a>
+                </p>
                 <h4 class="label">Other work</h4>
                 <ul class="other-work">
                   {otherWork.map((item) => (
@@ -183,6 +187,16 @@ const caseStudies = (await getCollection("caseStudies"))
   .case-studies .summary {
     color: var(--muted);
     font-size: 14px;
+  }
+
+  .stop .demo {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .demo a {
+    font-family: var(--font-mono);
   }
 
   h4 {
