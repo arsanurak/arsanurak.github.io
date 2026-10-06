@@ -14,7 +14,8 @@
     "test": "node --test 'scripts/**/*.test.ts'",
     "check:html": "html-validate 'dist/**/*.html'",
     "check:no-js": "node scripts/check-no-js.ts dist",
-    "check": "npm run typecheck && npm test && npm run build && npm run check:html && npm run check:no-js"
+    "check:contrast": "node scripts/check-contrast.ts dist",
+    "check": "npm run typecheck && npm test && npm run build && npm run check:html && npm run check:no-js && npm run check:contrast"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "5.3.0",

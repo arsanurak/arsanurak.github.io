@@ -1,17 +1,12 @@
 // Fails if the built site ships any JavaScript: a <script> element in a page
 // or SVG, or an emitted .js/.mjs/.cjs file. Usage: node scripts/check-no-js.ts <dist-dir>
-import { readFileSync, readdirSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { readFileSync } from "node:fs";
+import { relative } from "node:path";
+import { listFiles } from "./list-files.ts";
 
 const SCRIPT_ELEMENT = /<script[\s>]/i;
 const JS_FILE = /\.(?:js|mjs|cjs)$/i;
 const MARKUP_FILE = /\.(?:html|svg)$/i;
-
-function listFiles(dir: string): string[] {
-  return readdirSync(dir, { recursive: true, encoding: "utf8" })
-    .map((path) => join(dir, path))
-    .filter((path) => statSync(path).isFile());
-}
 
 export function findJavaScript(distDir: string): string[] {
   const problems: string[] = [];

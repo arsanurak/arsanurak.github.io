@@ -19,6 +19,7 @@
   --on-panel: #eef3f6;
   --panel-muted: #9fb0bd;
   --panel-accent: #5fc3cf;
+  --panel-line: #2c3c49;
 }
 
 @media (prefers-color-scheme: dark) {

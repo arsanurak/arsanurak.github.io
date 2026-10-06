@@ -1,20 +1,51 @@
 ---
 import Base from "../layouts/Base.astro";
-
-const headline = "Senior Platform & DevOps Engineer";
-const tagline = "Kubernetes, GitOps and AWS, debugged from the network layer up.";
+import Profile from "../components/Profile.astro";
+import { caseStudies, otherWork, profile, roles } from "../data/profile";
 ---
 
-<Base title={headline} description={tagline}>
+<Base title={`${profile.name} · ${profile.headline}`} description={profile.tagline}>
   <div class="layout">
-    <header class="profile">
-      <h1>{headline}</h1>
-      <p class="tagline">{tagline}</p>
-      <p class="location">Chiang Mai, Thailand (UTC+7) · Remote, or hybrid in Bangkok</p>
-    </header>
+    <Profile />
     <main>
-      <h2>Work, newest first</h2>
-      <p>The timeline and case studies are on their way.</p>
+      <p class="summary">{profile.summary}</p>
+
+      <section aria-labelledby="work">
+        <h2 id="work">Work, newest first</h2>
+        <ol class="timeline">
+          {
+            roles.map((role) => (
+              <li class:list={["stop", { current: role.current }]}>
+                <p class="years">{role.years}</p>
+                <h3>{role.title}</h3>
+                {role.organisation && <p class="organisation">{role.organisation}</p>}
+                {role.summary && <p class="role-summary">{role.summary}</p>}
+                {role.current && (
+                  <>
+                    <ul class="case-studies">
+                      {caseStudies.map((study) => (
+                        <li>
+                          <p class="label kicker">Case study</p>
+                          <p class="title">{study.title}</p>
+                          <p class="hook">{study.hook}</p>
+                        </li>
+                      ))}
+                    </ul>
+                    <h4 class="label">Other work</h4>
+                    <ul class="other-work">
+                      {otherWork.map((item) => (
+                        <li>
+                          <strong>{item.title}.</strong> {item.description}
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </li>
+            ))
+          }
+        </ol>
+      </section>
     </main>
   </div>
 </Base>
@@ -25,53 +56,140 @@ const tagline = "Kubernetes, GitOps and AWS, debugged from the network layer up.
     min-height: 100vh;
   }
 
-  .profile {
-    background: var(--panel);
-    color: var(--on-panel);
-    padding: 32px 16px;
-  }
-
-  h1 {
-    font-size: 30px;
-    font-weight: 600;
-    line-height: 1.1;
-    margin: 0 0 8px;
-  }
-
-  .tagline {
-    font: 400 16px/1.4 var(--font-mono);
-    color: var(--panel-accent);
-    margin: 0 0 16px;
-  }
-
-  .location {
-    color: var(--panel-muted);
-    font-size: 14px;
-    margin: 0;
-  }
-
   main {
-    padding: 32px 16px;
+    padding: 40px 16px 24px;
+    display: grid;
+    gap: 40px;
+    align-content: start;
+    max-width: 752px;
+  }
+
+  .summary {
+    margin: 0;
+    font-size: 18px;
+    max-width: 62ch;
   }
 
   h2 {
-    font: 500 13px/1 var(--font-mono);
-    letter-spacing: 0.08em;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 20px;
+  }
+
+  .timeline {
+    list-style: none;
+    margin: 0 0 0 6px;
+    padding: 0;
+    border-left: 2px solid var(--line);
+  }
+
+  .stop {
+    position: relative;
+    padding: 0 0 36px 28px;
+    display: grid;
+    gap: 4px;
+  }
+
+  .stop:last-child {
+    padding-bottom: 0;
+  }
+
+  .stop::before {
+    content: "";
+    position: absolute;
+    left: -8px;
+    top: 6px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--ground);
+    border: 2px solid var(--line);
+  }
+
+  .stop.current::before {
+    border-color: var(--accent);
+  }
+
+  .stop p {
+    margin: 0;
+  }
+
+  .years {
+    font: 500 13px/1.6 var(--font-mono);
+    letter-spacing: 0.06em;
     text-transform: uppercase;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+
+  h3 {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.25;
+    margin: 0;
+  }
+
+  .organisation,
+  .role-summary {
     color: var(--muted);
-    margin: 0 0 16px;
+    font-size: 15px;
+  }
+
+  .case-studies {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+
+  .case-studies li {
+    display: grid;
+    gap: 4px;
+    padding: 14px 16px;
+    background: var(--accent-soft);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .kicker {
+    color: var(--accent);
+  }
+
+  .title {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .hook {
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  h4 {
+    color: var(--muted);
+    margin: 20px 0 4px;
+  }
+
+  .other-work {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 15px;
+  }
+
+  .other-work strong {
+    color: var(--ink);
+    font-weight: 600;
   }
 
   @media (min-width: 820px) {
     .layout {
       grid-template-columns: minmax(280px, 360px) 1fr;
-    }
-
-    .profile {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      padding: 48px 32px;
     }
 
     main {

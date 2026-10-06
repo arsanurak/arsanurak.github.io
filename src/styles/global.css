@@ -21,3 +21,11 @@ body {
 a {
   color: var(--accent);
 }
+
+/* Small uppercase mono label: profile headings, case-study kicker, section labels. */
+.label {
+  font: 500 11px/1.4 var(--font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0;
+}
