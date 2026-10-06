@@ -1,0 +1,81 @@
+---
+import Base from "../layouts/Base.astro";
+
+const headline = "Senior Platform & DevOps Engineer";
+const tagline = "Kubernetes, GitOps and AWS, debugged from the network layer up.";
+---
+
+<Base title={headline} description={tagline}>
+  <div class="layout">
+    <header class="profile">
+      <h1>{headline}</h1>
+      <p class="tagline">{tagline}</p>
+      <p class="location">Chiang Mai, Thailand (UTC+7) · Remote, or hybrid in Bangkok</p>
+    </header>
+    <main>
+      <h2>Work, newest first</h2>
+      <p>The timeline and case studies are on their way.</p>
+    </main>
+  </div>
+</Base>
+
+<style>
+  .layout {
+    display: grid;
+    min-height: 100vh;
+  }
+
+  .profile {
+    background: var(--panel);
+    color: var(--on-panel);
+    padding: 32px 16px;
+  }
+
+  h1 {
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.1;
+    margin: 0 0 8px;
+  }
+
+  .tagline {
+    font: 400 16px/1.4 var(--font-mono);
+    color: var(--panel-accent);
+    margin: 0 0 16px;
+  }
+
+  .location {
+    color: var(--panel-muted);
+    font-size: 14px;
+    margin: 0;
+  }
+
+  main {
+    padding: 32px 16px;
+  }
+
+  h2 {
+    font: 500 13px/1 var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 16px;
+  }
+
+  @media (min-width: 820px) {
+    .layout {
+      grid-template-columns: minmax(280px, 360px) 1fr;
+    }
+
+    .profile {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 48px 32px;
+    }
+
+    main {
+      padding: 48px;
+    }
+  }
+</style>

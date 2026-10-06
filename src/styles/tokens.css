@@ -1,0 +1,37 @@
+/* Colour and type tokens: defined once here and reused everywhere.
+   Light is the default; dark follows the visitor's system theme. */
+:root {
+  color-scheme: light dark;
+
+  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --radius: 3px;
+
+  --ground: #f6f7f8;
+  --ink: #14202b;
+  --muted: #5b6875;
+  --line: #d9dee3;
+  --accent: #0d6e7a;
+  --accent-soft: #e6f0f1;
+
+  /* Profile column */
+  --panel: #14202b;
+  --on-panel: #eef3f6;
+  --panel-muted: #9fb0bd;
+  --panel-accent: #5fc3cf;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground: #0f161c;
+    --ink: #e4e9ee;
+    --muted: #93a0ac;
+    --line: #26323c;
+    --accent: #4fb6c2;
+    --accent-soft: #14262b;
+
+    --panel: #0a1015;
+    --on-panel: #e4e9ee;
+    --panel-muted: #8a99a6;
+  }
+}
