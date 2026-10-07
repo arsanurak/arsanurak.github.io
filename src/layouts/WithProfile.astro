@@ -1,21 +1,14 @@
 ---
 // The page shell: profile column beside the main content and footer on
 // desktop, stacked on top on phones.
-import Base, { type OgImage } from "./Base.astro";
+import Base, { type SeoProps } from "./Base.astro";
 import Footer from "../components/Footer.astro";
 import Profile from "../components/Profile.astro";
 
-interface Props {
-  title: string;
-  description: string;
-  ogType?: "website" | "article";
-  ogImage?: OgImage;
-}
-
-const { title, description, ogType, ogImage } = Astro.props;
+type Props = SeoProps;
 ---
 
-<Base title={title} description={description} ogType={ogType} ogImage={ogImage}>
+<Base {...Astro.props}>
   <div class="layout">
     <Profile />
     <div class="column">

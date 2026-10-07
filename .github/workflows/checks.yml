@@ -26,17 +26,18 @@ jobs:
 
       - run: npm ci
 
-      # Typecheck, unit tests, production build and the checks on dist/
-      - run: npm run check:site
+      # Everything in `npm run check` except the publish guard: typecheck, unit
+      # tests, production build and the checks on dist/
+      - run: npm run check:without-guard
 
       # Scans dist/ for denylisted strings. The list lives only in an Actions
-      # secret, exposed to this step alone, never to the build. Fails closed
-      # when the secret is missing, except on pull requests that get no
-      # Actions secrets (forks and Dependabot), where it warns.
+      # secret, exposed to this step alone, never to the build. This step only
+      # states whether the run gets Actions secrets (pull requests from forks
+      # and Dependabot don't); the script decides what a missing list means.
       - run: npm run check:publish-guard
         env:
           PUBLISH_GUARD_DENYLIST: ${{ secrets.PUBLISH_GUARD_DENYLIST }}
-          PUBLISH_GUARD_NO_SECRETS: ${{ github.event_name == 'pull_request' && (github.event.pull_request.head.repo.fork || github.event.pull_request.user.login == 'dependabot[bot]') }}
+          PUBLISH_GUARD_SECRETS_AVAILABLE: ${{ !(github.event_name == 'pull_request' && (github.event.pull_request.head.repo.fork || github.event.pull_request.user.login == 'dependabot[bot]')) }}
 
       # Lighthouse performance and accessibility budget on every built page,
       # using the runner's preinstalled Chrome. Thresholds: lighthouserc.json

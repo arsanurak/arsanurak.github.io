@@ -1,9 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
 import { findSeoProblems } from "./check-seo.ts";
+import { writeSite as writeFiles } from "./test-site.ts";
 
 const SITE = "https://example.github.io";
 
@@ -31,8 +29,7 @@ const SITEMAP = (paths: string[]) =>
 
 // A built site: files keyed by path under dist. Defaults to a complete site.
 function writeSite(files: Record<string, string | null>): string {
-  const root = mkdtempSync(join(tmpdir(), "seo-"));
-  const all: Record<string, string | null> = {
+  return writeFiles({
     "og.png": "png",
     "robots.txt": `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap-index.xml\n`,
     "sitemap-index.xml": `<?xml version="1.0"?><sitemapindex><sitemap><loc>${SITE}/sitemap-0.xml</loc></sitemap></sitemapindex>`,
@@ -40,13 +37,7 @@ function writeSite(files: Record<string, string | null>): string {
     "index.html": head("/"),
     "about/index.html": head("/about/"),
     ...files,
-  };
-  for (const [path, content] of Object.entries(all)) {
-    if (content === null) continue;
-    mkdirSync(dirname(join(root, path)), { recursive: true });
-    writeFileSync(join(root, path), content);
-  }
-  return root;
+  });
 }
 
 test("a site where every page has every tag passes", () => {

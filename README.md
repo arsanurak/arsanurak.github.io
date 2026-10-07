@@ -22,6 +22,8 @@ npm run check
 
 It typechecks, runs the unit tests (check scripts and the diagram plugin), builds the site, validates every built HTML page, fails if any `<script>` element (in HTML or SVG) or JavaScript file is in the output, checks that every text colour pair meets WCAG AA contrast in both themes, checks that every published case-study slug still has a page, and checks that every page has its title, meta description, canonical URL and Open Graph tags (absolute https URLs, an image that exists in the build), that `robots.txt` allows crawling, that the sitemap lists every page, and that every internal link, image and `#anchor` in the output resolves. Last, it runs the publish guard.
 
+`npm run check` is `npm run check:without-guard` followed by `npm run check:publish-guard`. CI runs the two as separate steps so that only the guard's step sees the private denylist.
+
 ### Lighthouse budget
 
 CI also runs a Lighthouse budget on every built page. It needs Chrome, so it is a separate command (run `npm run check` first to build):
@@ -34,7 +36,7 @@ It audits each page three times and fails if the median performance score is bel
 
 ### Publish guard
 
-The publish guard scans every file in `dist/` for terms on a private denylist and fails on any match. It reports the file and the entry number, never the term. Matching ignores case, decoded HTML entities and line wrapping. A line made only of digits and phone punctuation (at least 7 digits) is a phone number, and matches with or without spaces, dashes, brackets, a leading 0 or a country code.
+The publish guard scans every file in `dist/` for terms on a private denylist and fails on any match. It reports the file and the entry number, never the term. Matching ignores case, decoded HTML entities and line wrapping. A line made only of digits and phone punctuation (at least 7 digits) is a phone number, and matches with or without spaces, dashes, brackets, a leading 0 or a country code (with or without the `+`).
 
 The denylist is never committed. It is one term per line, with blank lines and `#` comments ignored. Write a phone number in national form (`012 345 6789`), or in international form with a space after the country code (`+00 12 345 6789`).
 
@@ -55,6 +57,6 @@ Dependabot (`.github/dependabot.yml`) opens weekly update PRs for npm packages a
 - `src/content/published-slugs.json`: every case-study slug that has been published. Slugs are permanent: add a slug when its case study goes live, and never remove or rename one.
 - `src/lib/remark-diagrams.ts`: renders ` ```mermaid alt="…" caption="…" ` blocks to inline SVG at build time, and turns a hand-made SVG or PNG on its own line (`![alt](./file.svg "caption")`) into a figure. Every diagram needs alt text. A hand-made SVG loads as an image, so it repeats the token hex values (light and dark) rather than using the CSS variables.
 - `public/`: files copied to the site as they are: `robots.txt` and `og-default.png`, the default link-preview image (1200x630). Its source is `scripts/og-image/og-default.html`; the render command is in that file. A case study can set its own with `ogImage` in its frontmatter.
-- `scripts/`: checks that run against the built site in `dist/`.
+- `scripts/`: checks that run against the built site in `dist/`, with their tests and shared helpers (`built-site.ts` and `list-files.ts` for reading `dist/`, `test-site.ts` for test fixtures). `scripts/og-image/` holds the source of the default link-preview image, `og-default.html`, with its render command.
 
 `resume/` and `.publish-guard-denylist` are gitignored and must never be committed.

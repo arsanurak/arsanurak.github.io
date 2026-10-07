@@ -2,35 +2,45 @@
 // <title>, meta description, canonical URL and the Open Graph tags, with
 // absolute https URLs. Usage: node scripts/check-seo.ts <dist-dir>
 import { existsSync, readFileSync } from "node:fs";
-import { join, relative, sep } from "node:path";
-import { listFiles } from "./list-files.ts";
+import { join, relative } from "node:path";
+import { elements, listPages, servedPath } from "./built-site.ts";
 
-const OPEN_GRAPH = ["og:title", "og:type", "og:description", "og:url", "og:image", "og:image:width", "og:image:height", "og:image:alt"];
+// The page's head as a crawler reads it: non-empty values only.
+type Head = { title?: string; meta: Map<string, string>; links: Map<string, string> };
 
-// The attributes of every <tag ...> element in the page.
-function elements(html: string, tag: string): Record<string, string>[] {
-  return [...html.matchAll(new RegExp(`<${tag}\\b([^>]*)>`, "gi"))].map(([, attrs]) =>
-    Object.fromEntries([...attrs.matchAll(/([\w:-]+)\s*=\s*"([^"]*)"/g)].map(([, name, value]) => [name.toLowerCase(), value])),
-  );
+function readHead(html: string): Head {
+  const meta = new Map<string, string>();
+  for (const { attributes } of elements(html, "meta")) {
+    const key = attributes.property ?? attributes.name;
+    const content = attributes.content?.trim();
+    if (key && content) meta.set(key, content);
+  }
+  const links = new Map<string, string>();
+  for (const { attributes } of elements(html, "link")) {
+    if (attributes.rel && attributes.href) links.set(attributes.rel, attributes.href);
+  }
+  return { title: html.match(/<title>([^<]*)<\/title>/i)?.[1].trim() || undefined, meta, links };
 }
 
-// The page's head as a crawler reads it: tag name -> non-empty value.
-function readHead(html: string): Map<string, string> {
-  const found = new Map<string, string>();
-  const title = html.match(/<title>([^<]*)<\/title>/i)?.[1].trim();
-  if (title) found.set("<title>", title);
-  for (const meta of elements(html, "meta")) {
-    const name = meta.property ?? meta.name;
-    if (name && meta.content?.trim()) found.set(name === "description" ? "meta description" : name, meta.content.trim());
-  }
-  for (const link of elements(html, "link")) {
-    if (link.rel === "canonical" && link.href) found.set("canonical", link.href);
-  }
-  return found;
-}
+// Every tag a page needs: its name in reports, where to read it, and whether
+// it is a URL that must be absolute https ("absolute") and also point at the
+// page itself ("self").
+type RequiredTag = { name: string; read: (head: Head) => string | undefined; url?: "absolute" | "self" };
+const meta = (key: string) => (head: Head) => head.meta.get(key);
 
-const URL_TAGS = ["canonical", "og:url", "og:image"];
-const SELF_TAGS = ["canonical", "og:url"];
+const REQUIRED_TAGS: RequiredTag[] = [
+  { name: "<title>", read: (head) => head.title },
+  { name: "meta description", read: meta("description") },
+  { name: "canonical", read: (head) => head.links.get("canonical"), url: "self" },
+  { name: "og:title", read: meta("og:title") },
+  { name: "og:type", read: meta("og:type") },
+  { name: "og:description", read: meta("og:description") },
+  { name: "og:url", read: meta("og:url"), url: "self" },
+  { name: "og:image", read: meta("og:image"), url: "absolute" },
+  { name: "og:image:width", read: meta("og:image:width") },
+  { name: "og:image:height", read: meta("og:image:height") },
+  { name: "og:image:alt", read: meta("og:image:alt") },
+];
 
 function httpsUrl(value: string): URL | undefined {
   try {
@@ -41,37 +51,43 @@ function httpsUrl(value: string): URL | undefined {
   }
 }
 
-// The URL path a built file is served at: about/index.html -> /about/.
-function servedPath(path: string): string {
-  return `/${path.split(sep).join("/").replace(/(^|\/)index\.html$/, "$1")}`;
+// Each required tag is present, and its URL (if it is one) is valid.
+function findTagProblems(path: string, head: Head): string[] {
+  const problems: string[] = [];
+  for (const { name, read, url } of REQUIRED_TAGS) {
+    const value = read(head);
+    if (value === undefined) {
+      problems.push(`${path}: missing ${name}`);
+      continue;
+    }
+    if (!url) continue;
+    const parsed = httpsUrl(value);
+    if (!parsed) problems.push(`${path}: ${name} is not an absolute https URL: ${value}`);
+    else if (url === "self" && parsed.pathname !== servedPath(path)) {
+      problems.push(`${path}: ${name} points at ${parsed.pathname}, not ${servedPath(path)}`);
+    }
+  }
+  return problems;
+}
+
+// An og:image on the site's own origin must be one the build emitted.
+function findImageProblems(distDir: string, path: string, head: Head): string[] {
+  const image = httpsUrl(head.meta.get("og:image") ?? "");
+  const canonical = httpsUrl(head.links.get("canonical") ?? "");
+  if (!image || !canonical || image.origin !== canonical.origin) return [];
+  const imagePath = decodeURIComponent(image.pathname);
+  return existsSync(join(distDir, imagePath)) ? [] : [`${path}: og:image ${imagePath} is not in the built site`];
 }
 
 export function findSeoProblems(distDir: string): string[] {
   const problems: string[] = [];
   const canonicals: string[] = [];
-  for (const file of listFiles(distDir).filter((f) => f.endsWith(".html")).sort()) {
+  for (const file of listPages(distDir)) {
     const path = relative(distDir, file);
-    const tags = readHead(readFileSync(file, "utf8"));
-    for (const required of ["<title>", "meta description", "canonical", ...OPEN_GRAPH]) {
-      if (!tags.has(required)) problems.push(`${path}: missing ${required}`);
-    }
-    for (const name of URL_TAGS) {
-      const value = tags.get(name);
-      if (value === undefined) continue;
-      const url = httpsUrl(value);
-      if (!url) problems.push(`${path}: ${name} is not an absolute https URL: ${value}`);
-      else if (SELF_TAGS.includes(name) && url.pathname !== servedPath(path)) {
-        problems.push(`${path}: ${name} points at ${url.pathname}, not ${servedPath(path)}`);
-      }
-    }
-    // An image on this site must be one the build emitted.
-    const image = httpsUrl(tags.get("og:image") ?? "");
-    const canonical = httpsUrl(tags.get("canonical") ?? "");
+    const head = readHead(readFileSync(file, "utf8"));
+    problems.push(...findTagProblems(path, head), ...findImageProblems(distDir, path, head));
+    const canonical = httpsUrl(head.links.get("canonical") ?? "");
     if (canonical) canonicals.push(canonical.href);
-    if (image && canonical && image.origin === canonical.origin) {
-      const imagePath = decodeURIComponent(image.pathname);
-      if (!existsSync(join(distDir, imagePath))) problems.push(`${path}: og:image ${imagePath} is not in the built site`);
-    }
   }
   return [...problems, ...findCrawlProblems(distDir, canonicals)];
 }

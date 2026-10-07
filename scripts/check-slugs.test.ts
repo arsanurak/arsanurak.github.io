@@ -1,18 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
 import { findMissingSlugs, findUnregisteredPages, parseRegistry } from "./check-slugs.ts";
+import { page, writeSite as writeFiles } from "./test-site.ts";
 
-function writeSite(pages: string[]): string {
-  const root = mkdtempSync(join(tmpdir(), "slugs-"));
-  for (const page of pages) {
-    mkdirSync(join(root, page), { recursive: true });
-    writeFileSync(join(root, page, "index.html"), "<!doctype html>");
-  }
-  return root;
-}
+// A built site with a page at each of the given directories.
+const writeSite = (pages: string[]) => writeFiles(Object.fromEntries(pages.map((dir) => [`${dir}/index.html`, page("")])));
 
 test("every registered slug with a page passes", () => {
   const dist = writeSite(["case-studies/a", "case-studies/b"]);

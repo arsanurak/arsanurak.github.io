@@ -1,22 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { findJavaScript } from "./check-no-js.ts";
-
-function writeSite(files: Record<string, string>): string {
-  const root = mkdtempSync(join(tmpdir(), "no-js-"));
-  for (const [path, content] of Object.entries(files)) {
-    const full = join(root, path);
-    mkdirSync(join(full, ".."), { recursive: true });
-    writeFileSync(full, content);
-  }
-  return root;
-}
-
-const page = (body: string) =>
-  `<!doctype html><html lang="en"><head><title>t</title></head><body>${body}</body></html>`;
+import { page, writeSite } from "./test-site.ts";
 
 test("a site with only HTML and CSS passes", () => {
   const dir = writeSite({

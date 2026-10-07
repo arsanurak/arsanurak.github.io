@@ -1,55 +1,65 @@
-// Fails if any internal link in the built site (an href or src on the site
-// itself, including absolute URLs on the site's own origin) points at a page or
-// file that doesn't exist, or at an anchor with no matching id on the target
-// page. Links to other sites are not checked. The site's origin comes from
-// astro.config.mjs. Usage: node scripts/check-links.ts <dist-dir>
-import { existsSync, readFileSync, statSync } from "node:fs";
-import { join, relative, sep } from "node:path";
-import { listFiles } from "./list-files.ts";
+// Fails if any internal link in the built site (an href, src, srcset candidate
+// or xlink:href on the site itself, including absolute URLs on the site's own
+// origin) points at a page or file that doesn't exist, or at an anchor with no
+// matching id on the target page. Links to other sites are not checked. The
+// site's origin comes from astro.config.mjs. Usage: node scripts/check-links.ts <dist-dir>
+import { readFileSync } from "node:fs";
+import { relative } from "node:path";
+import { elements, listPages, resolveServedPath, servedPath } from "./built-site.ts";
 
-const LINK_ATTRIBUTE = /\s(?:href|src)\s*=\s*"([^"]*)"/gi;
-const ID_ATTRIBUTE = /\sid\s*=\s*"([^"]*)"/gi;
-// Stands in for the site's origin when none is given.
-const DEFAULT_SITE = "https://site.invalid";
-
-function resolvePath(distDir: string, path: string): string | undefined {
-  const target = join(distDir, path);
-  if (existsSync(target) && statSync(target).isFile()) return target;
-  const index = join(target, "index.html");
-  if (existsSync(index)) return index;
-  return undefined;
+// The URLs in a srcset: each candidate is a URL, then optional descriptors,
+// separated by commas. A URL may itself contain commas (a data: URL), so it
+// runs to the next whitespace.
+function srcsetUrls(srcset: string): string[] {
+  const urls: string[] = [];
+  let rest = srcset;
+  while ((rest = rest.replace(/^[\s,]+/, "")) !== "") {
+    const url = rest.match(/^\S+/)![0];
+    rest = rest.slice(url.length);
+    if (url.endsWith(",")) {
+      urls.push(url.replace(/,+$/, ""));
+      continue;
+    }
+    urls.push(url);
+    rest = rest.replace(/^[^,]*/, "");
+  }
+  return urls;
 }
 
-// The URL a visitor sees for a built file: about/index.html is /about/.
-function pageUrl(path: string, site: string): URL {
-  return new URL(`/${path.split(sep).join("/").replace(/(^|\/)index\.html$/, "$1")}`, site);
+// Every URL an element links to.
+function linksIn(attributes: Record<string, string>): string[] {
+  const links = ["href", "src", "xlink:href"].flatMap((name) => (name in attributes ? [attributes[name]] : []));
+  if (attributes.srcset) links.push(...srcsetUrls(attributes.srcset));
+  return links;
 }
 
-export function findBrokenLinks(distDir: string, { site = DEFAULT_SITE }: { site?: string } = {}): string[] {
+export function findBrokenLinks(distDir: string, { site }: { site: string }): string[] {
   const origin = new URL(site).origin;
   const problems: string[] = [];
   const ids = new Map<string, Set<string>>();
   const idsIn = (file: string) => {
     if (!ids.has(file)) {
-      ids.set(file, new Set([...readFileSync(file, "utf8").matchAll(ID_ATTRIBUTE)].map(([, id]) => id)));
+      ids.set(file, new Set(elements(readFileSync(file, "utf8")).flatMap(({ attributes }) => attributes.id ?? [])));
     }
     return ids.get(file)!;
   };
 
-  for (const file of listFiles(distDir).filter((f) => f.endsWith(".html"))) {
+  for (const file of listPages(distDir)) {
     const from = relative(distDir, file);
-    const html = readFileSync(file, "utf8");
-    for (const [, href] of html.matchAll(LINK_ATTRIBUTE)) {
-      const url = new URL(href, pageUrl(from, site));
-      if (url.origin !== origin) continue;
-      const target = resolvePath(distDir, decodeURIComponent(url.pathname));
-      if (!target) {
-        problems.push(`${from}: ${href} (no such page or file)`);
-        continue;
-      }
-      const fragment = decodeURIComponent(url.hash.slice(1));
-      if (fragment && !idsIn(target).has(fragment)) {
-        problems.push(`${from}: ${href} (no element with id "${fragment}")`);
+    const base = new URL(servedPath(from), site);
+    for (const { attributes } of elements(readFileSync(file, "utf8"))) {
+      for (const link of linksIn(attributes)) {
+        const url = new URL(link, base);
+        if (url.origin !== origin) continue;
+        const target = resolveServedPath(distDir, decodeURIComponent(url.pathname));
+        if (!target) {
+          problems.push(`${from}: ${link} (no such page or file)`);
+          continue;
+        }
+        const fragment = decodeURIComponent(url.hash.slice(1));
+        if (fragment && !idsIn(target).has(fragment)) {
+          problems.push(`${from}: ${link} (no element with id "${fragment}")`);
+        }
       }
     }
   }
@@ -59,6 +69,7 @@ export function findBrokenLinks(distDir: string, { site = DEFAULT_SITE }: { site
 if (import.meta.main) {
   const distDir = process.argv[2] ?? "dist";
   const { default: config } = await import("../astro.config.mjs");
+  if (!config.site) throw new Error("astro.config.mjs must set `site`, the origin internal links are checked against.");
   const problems = findBrokenLinks(distDir, { site: config.site });
   if (problems.length > 0) {
     console.error(`Found broken internal links in ${distDir}:\n${problems.map((p) => `  ${p}`).join("\n")}`);

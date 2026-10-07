@@ -10,12 +10,16 @@ export interface OgImage {
   alt: string;
 }
 
-interface Props {
+// What a page tells search engines and link previews. Layouts that wrap Base
+// take the same props and pass them straight through.
+export interface SeoProps {
   title: string;
   description: string;
   ogType?: "website" | "article";
   ogImage?: OgImage;
 }
+
+type Props = SeoProps;
 
 const DEFAULT_OG_IMAGE: OgImage = {
   src: "/og-default.png",
