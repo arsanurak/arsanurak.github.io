@@ -131,6 +131,10 @@ const agentStudy: Link = {
 const otherWorkLink: Link = { href: "#other-work", label: "Other work" };
 const siteBuild: Link = { href: "/how-this-site-is-built/", label: "How this site is built" };
 const timeline: Link = { href: "#work", label: "Work history" };
+const demo = "https://github.com/arsanurak/platform-demo";
+const demoMigration: Link = { href: `${demo}#tour-1-migrate-in-waves`, label: "Runnable demo" };
+const demoGuardrails: Link = { href: `${demo}#tour-2-guardrails-without-credentials`, label: "Terraform demo" };
+const demoWorkflow: Link = { href: `${demo}#tour-3-how-this-repo-was-built`, label: "Built in public" };
 
 // "What I can do": capabilities in the words job posts use, each with one line of proof.
 // Every line is confirmed by Ars before it ships.
@@ -145,24 +149,24 @@ export const capabilities: Capability[] = [
     name: "Cloud and platform migration",
     proof:
       "About a hundred services moved between Kubernetes platforms in dependency-ordered waves, each gated by an HTTP parity check, with rollback kept until the last wave.",
-    evidence: [migrationStudy],
+    evidence: [migrationStudy, demoMigration],
   },
   {
     name: "Infrastructure as code (Terraform)",
     proof: "AWS network, cluster and node provisioning in Terraform, planned on every pull request and applied on merge.",
-    evidence: [guardrailsStudy],
+    evidence: [guardrailsStudy, demoGuardrails],
   },
   {
     name: "GitOps and CI/CD",
     proof:
       "Argo CD for every cluster change, and GitHub Actions with OIDC and SHA-pinned actions. This site's own pipeline won't deploy anything that fails its checks.",
-    evidence: [guardrailsStudy, siteBuild],
+    evidence: [demoMigration, guardrailsStudy, siteBuild],
   },
   {
     name: "Cloud security and IAM",
     proof:
       "CI with no stored keys, a permission boundary the pipeline can't edit, an account split, and guardrails asserted as tests.",
-    evidence: [guardrailsStudy],
+    evidence: [guardrailsStudy, demoGuardrails],
   },
   {
     name: "Disaster recovery planning",
@@ -202,6 +206,6 @@ export const capabilities: Capability[] = [
     name: "Team leadership and AI-assisted delivery",
     proof:
       "I've led small infrastructure teams, and I run infrastructure work through AI agents: recorded decisions, hook guardrails, and a reviewed pull request for every change.",
-    evidence: [agentStudy],
+    evidence: [agentStudy, demoWorkflow],
   },
 ];
