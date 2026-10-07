@@ -36,6 +36,6 @@
     "@lhci/cli": "0.15.1",
     "@types/node": "24.19.1",
     "html-validate": "11.16.2",
-    "typescript": "6.0.3"
+    "typescript": "7.0.2"
   }
 }
