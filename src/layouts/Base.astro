@@ -1,5 +1,29 @@
 ---
 import "../styles/global.css";
+import sans400 from "@fontsource/schibsted-grotesk/files/schibsted-grotesk-latin-400-normal.woff2?url";
+import sans500 from "@fontsource/schibsted-grotesk/files/schibsted-grotesk-latin-500-normal.woff2?url";
+import sans700 from "@fontsource/schibsted-grotesk/files/schibsted-grotesk-latin-700-normal.woff2?url";
+import sans800 from "@fontsource/schibsted-grotesk/files/schibsted-grotesk-latin-800-normal.woff2?url";
+import mono400 from "@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2?url";
+import mono500 from "@fontsource/jetbrains-mono/files/jetbrains-mono-latin-500-normal.woff2?url";
+
+// Self-hosted fonts, preloaded and declared with font-display: optional so
+// the page never re-lays out when a web font arrives late (a swap here
+// caused a layout shift of about 0.3 on CI runners).
+const fonts = [
+  { family: "Schibsted Grotesk", weight: 400, url: sans400, preload: true },
+  { family: "Schibsted Grotesk", weight: 500, url: sans500, preload: false },
+  { family: "Schibsted Grotesk", weight: 700, url: sans700, preload: true },
+  { family: "Schibsted Grotesk", weight: 800, url: sans800, preload: true },
+  { family: "JetBrains Mono", weight: 400, url: mono400, preload: true },
+  { family: "JetBrains Mono", weight: 500, url: mono500, preload: false },
+];
+const fontFaces = fonts
+  .map(
+    (f) =>
+      `@font-face{font-family:"${f.family}";font-style:normal;font-weight:${f.weight};font-display:optional;src:url(${f.url}) format("woff2")}`,
+  )
+  .join("");
 
 // The link-preview image. Pages without their own use the site default
 // (public/og-default.png, rendered from scripts/og-image/og-default.html).
@@ -39,6 +63,8 @@ const image = new URL(ogImage.src, Astro.site).href;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {fonts.filter((f) => f.preload).map((f) => <link rel="preload" href={f.url} as="font" type="font/woff2" crossorigin />)}
+    <style set:html={fontFaces} />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
