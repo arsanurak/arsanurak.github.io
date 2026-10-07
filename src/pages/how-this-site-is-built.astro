@@ -104,10 +104,12 @@ import { demoRepo, profile } from "../data/profile";
           deploy job, which alone gets permission to publish to Pages.
         </li>
         <li>
-          The Node major version is pinned in one file that both local tooling and the checks read. The deploy workflow
-          names the same major version.
+          The Node major version is pinned in one file that local tooling, the checks and the deploy all read.
         </li>
-        <li>Every direct npm dependency is pinned to an exact version, and CI installs from the lockfile.</li>
+        <li>
+          Every direct npm dependency is pinned to an exact version, and both the checks and the deploy install with
+          <code>npm ci</code>, exactly what the lockfile lists.
+        </li>
         <li>
           Dependabot proposes npm and Action updates weekly, after a week-long cooldown on each new release, and keeps
           Actions pinned to SHAs. Every update goes through the same checks as any other change.
@@ -120,8 +122,9 @@ import { demoRepo, profile } from "../data/profile";
 
       <h2>Deploying</h2>
       <p>
-        Every push to <code>main</code> builds the site with <a href="https://github.com/withastro/action">Astro's
-        GitHub Action</a> and publishes it to GitHub Pages. Nothing else deploys: the workflow doesn't run for other
+        Every push to <code>main</code> runs the deploy workflow, which installs from the lockfile, runs the same checks
+        as above, publish guard and Lighthouse included, and uploads the <code>dist/</code> those checks passed to
+        GitHub Pages. If any check fails, nothing is published. Nothing else deploys: the workflow doesn't run for other
         branches or pull requests, and a manual run started from any branch but <code>main</code> is skipped. Pages
         accepts the upload through a short-lived OpenID Connect token, so there is no long-lived deploy key to leak.
       </p>

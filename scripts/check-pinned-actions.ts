@@ -5,8 +5,10 @@ import { readFileSync } from "node:fs";
 import { relative } from "node:path";
 import { listFiles } from "./list-files.ts";
 
-// A `uses:` key, with or without a leading list dash, and its (optionally quoted) value.
-const USES = /^\s*(?:-\s+)?uses:\s*["']?([^\s"'#]+)/;
+// A `uses:` key and its (optionally quoted) value: at the start of a line, with
+// or without a leading list dash, or after `{` or `,` in a flow-style mapping
+// such as `- { name: x, uses: actions/checkout@v4 }`.
+const USES = /(?:^\s*(?:-\s+)?|[{,]\s*)uses:\s*["']?([^\s"'#,}]+)/;
 const FULL_SHA = /@[0-9a-f]{40}$/;
 const DOCKER_DIGEST = /^docker:\/\/[^@]+@sha256:[0-9a-f]{64}$/;
 

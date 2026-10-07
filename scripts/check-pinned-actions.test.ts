@@ -24,6 +24,13 @@ test("an action pinned to a tag or branch is reported with file and line", () =>
   ]);
 });
 
+test("a flow-style step is checked like a block-style one", () => {
+  const dir = writeSite({
+    "ci.yml": `steps:\n  - { uses: actions/checkout@v4 }\n  - { name: x, uses: "actions/setup-node@main" }\n  - { uses: actions/checkout@${SHA} }\n`,
+  });
+  assert.deepEqual(findUnpinnedActions(dir), ["ci.yml:2: actions/checkout@v4", "ci.yml:3: actions/setup-node@main"]);
+});
+
 test("local actions in this repo need no pin", () => {
   const dir = writeSite({ "ci.yml": "steps:\n  - uses: ./.github/actions/setup\n" });
   assert.deepEqual(findUnpinnedActions(dir), []);
