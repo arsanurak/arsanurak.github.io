@@ -1,12 +1,33 @@
 ---
 import "../styles/global.css";
 
+// The link-preview image. Pages without their own use the site default
+// (public/og-default.png, rendered from scripts/og-image/og-default.html).
+export interface OgImage {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+}
+
 interface Props {
   title: string;
   description: string;
+  ogType?: "website" | "article";
+  ogImage?: OgImage;
 }
 
-const { title, description } = Astro.props;
+const DEFAULT_OG_IMAGE: OgImage = {
+  src: "/og-default.png",
+  width: 1200,
+  height: 630,
+  alt: "Anurak Chatree (Ars), Senior Platform & DevOps Engineer: Kubernetes, GitOps and AWS, debugged from the network layer up.",
+};
+
+const { title, description, ogType = "website", ogImage = DEFAULT_OG_IMAGE } = Astro.props;
+// Absolute https URLs, built from `site` in astro.config.mjs.
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const image = new URL(ogImage.src, Astro.site).href;
 ---
 
 <!doctype html>
@@ -16,6 +37,18 @@ const { title, description } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:title" content={title} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Anurak Chatree (Ars)" />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content={String(ogImage.width)} />
+    <meta property="og:image:height" content={String(ogImage.height)} />
+    <meta property="og:image:alt" content={ogImage.alt} />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
     <slot />
