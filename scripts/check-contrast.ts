@@ -83,14 +83,19 @@ export function findContrastFailures(css: string, pairs: Pair[] = TEXT_PAIRS): s
 
 if (import.meta.main) {
   const distDir = process.argv[2] ?? "dist";
+  // Stylesheets are inlined into the pages, so read <style> blocks from HTML too.
   const css = listFiles(distDir)
-    .filter((path) => path.endsWith(".css"))
-    .map((path) => readFileSync(path, "utf8"))
+    .filter((path) => path.endsWith(".css") || path.endsWith(".html"))
+    .map((path) => {
+      const text = readFileSync(path, "utf8");
+      if (path.endsWith(".css")) return text;
+      return [...text.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map(([, body]) => body).join("\n");
+    })
     .join("\n");
   const failures = findContrastFailures(css);
   if (failures.length > 0) {
     console.error(`Contrast below WCAG AA:\n${failures.map((f) => `  ${f}`).join("\n")}`);
     process.exit(1);
   }
-  console.log(`All ${TEXT_PAIRS.length} text colour pairs meet WCAG AA in both themes.`);
+  console.log(`All ${TEXT_PAIRS.length} text colour pairs meet WCAG AA.`);
 }

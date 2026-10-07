@@ -15,7 +15,8 @@ export default defineConfig({
     processor: unified({ remarkPlugins: [remarkDiagrams] }),
   },
   build: {
-    // Keep all CSS in external files so the output stays plain HTML + CSS.
-    inlineStylesheets: "never",
+    // Inline the (small) CSS so no stylesheet request blocks first paint;
+    // separate files dropped Lighthouse performance below 0.95 on CI runners.
+    inlineStylesheets: "always",
   },
 });
