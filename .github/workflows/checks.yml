@@ -26,5 +26,14 @@ jobs:
 
       - run: npm ci
 
-      # Typecheck, unit tests, production build, HTML validity, zero JS
-      - run: npm run check
+      # Typecheck, unit tests, production build and the checks on dist/
+      - run: npm run check:site
+
+      # Scans dist/ for denylisted strings. The list lives only in an Actions
+      # secret, exposed to this step alone, never to the build. Fails closed
+      # when the secret is missing, except on pull requests that get no
+      # Actions secrets (forks and Dependabot), where it warns.
+      - run: npm run check:publish-guard
+        env:
+          PUBLISH_GUARD_DENYLIST: ${{ secrets.PUBLISH_GUARD_DENYLIST }}
+          PUBLISH_GUARD_NO_SECRETS: ${{ github.event_name == 'pull_request' && (github.event.pull_request.head.repo.fork || github.event.pull_request.user.login == 'dependabot[bot]') }}

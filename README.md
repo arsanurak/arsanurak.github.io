@@ -20,7 +20,16 @@ One command runs every check that CI runs on a pull request:
 npm run check
 ```
 
-It typechecks, runs the unit tests (check scripts and the diagram plugin), builds the site, validates every built HTML page, fails if any `<script>` element (in HTML or SVG) or JavaScript file is in the output, checks that every text colour pair meets WCAG AA contrast in both themes, checks that every published case-study slug still has a page, and checks that every page has its title, meta description, canonical URL and Open Graph tags (absolute https URLs, an image that exists in the build), that `robots.txt` allows crawling and that the sitemap lists every page.
+It typechecks, runs the unit tests (check scripts and the diagram plugin), builds the site, validates every built HTML page, fails if any `<script>` element (in HTML or SVG) or JavaScript file is in the output, checks that every text colour pair meets WCAG AA contrast in both themes, checks that every published case-study slug still has a page, and checks that every page has its title, meta description, canonical URL and Open Graph tags (absolute https URLs, an image that exists in the build), that `robots.txt` allows crawling and that the sitemap lists every page. Last, it runs the publish guard.
+
+### Publish guard
+
+The publish guard scans every file in `dist/` for terms on a private denylist and fails on any match. It reports the file and the entry number, never the term. Matching ignores case, decoded HTML entities and line wrapping. A line made only of digits and phone punctuation (at least 7 digits) is a phone number, and matches with or without spaces, dashes, brackets, a leading 0 or a country code.
+
+The denylist is never committed. It is one term per line, with blank lines and `#` comments ignored. Write a phone number in national form (`012 345 6789`), or in international form with a space after the country code (`+00 12 345 6789`).
+
+- **Locally:** put the list in `.publish-guard-denylist` at the repo root (gitignored). Without it, `npm run check` warns and skips the scan.
+- **In CI:** the list is the `PUBLISH_GUARD_DENYLIST` Actions secret (repository settings, Secrets and variables, Actions), in the same format. Only the guard's own step sees it, not the build. Without it the run fails, except on pull requests that get no Actions secrets (forks and Dependabot), where it warns; the guard runs again with the list on `main`.
 
 ## Layout
 
@@ -34,4 +43,4 @@ It typechecks, runs the unit tests (check scripts and the diagram plugin), build
 - `public/`: files copied to the site as they are: `robots.txt` and `og-default.png`, the default link-preview image (1200x630). Its source is `scripts/og-image/og-default.html`; the render command is in that file. A case study can set its own with `ogImage` in its frontmatter.
 - `scripts/`: checks that run against the built site in `dist/`.
 
-`resume/` is gitignored and must never be committed.
+`resume/` and `.publish-guard-denylist` are gitignored and must never be committed.
