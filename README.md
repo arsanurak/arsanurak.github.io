@@ -20,7 +20,17 @@ One command runs every check that CI runs on a pull request:
 npm run check
 ```
 
-It typechecks, runs the unit tests (check scripts and the diagram plugin), builds the site, validates every built HTML page, fails if any `<script>` element (in HTML or SVG) or JavaScript file is in the output, checks that every text colour pair meets WCAG AA contrast in both themes, and checks that every published case-study slug still has a page.
+It typechecks, runs the unit tests (check scripts and the diagram plugin), builds the site, validates every built HTML page, fails if any `<script>` element (in HTML or SVG) or JavaScript file is in the output, checks that every text colour pair meets WCAG AA contrast in both themes, checks that every published case-study slug still has a page, and checks that every internal link, image and `#anchor` in the output resolves.
+
+CI also runs a Lighthouse budget on every built page. It needs Chrome, so it is a separate command (run `npm run check` first to build):
+
+```sh
+npm run lighthouse
+```
+
+It audits each page three times and fails if the median performance score is below 0.95 or the median accessibility score is below 1.0. The thresholds live in `lighthouserc.json`, and reports land in the gitignored `.lighthouseci/`. If Chrome isn't found, point `CHROME_PATH` at it.
+
+Dependabot (`.github/dependabot.yml`) opens weekly update PRs for npm packages and the SHA-pinned Actions.
 
 ## Layout
 
