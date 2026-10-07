@@ -1,0 +1,17 @@
+---
+// The shell for article pages (case studies, "How this site is built"):
+// top bar, one readable column, footer.
+import Base, { type SeoProps } from "./Base.astro";
+import Footer from "../components/Footer.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+
+type Props = SeoProps;
+---
+
+<Base {...Astro.props}>
+  <SiteHeader />
+  <main class="wrap">
+    <slot />
+  </main>
+  <Footer />
+</Base>

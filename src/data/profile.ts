@@ -1,4 +1,4 @@
-// The profile column and timeline copy for the home page.
+// The home page copy: hero, capabilities, timeline and other work.
 // Content rules: employers by sector and location only, no phone number,
 // rounded relative figures only, "I" for my decisions, "the team" for shared work.
 
@@ -209,3 +209,17 @@ export const capabilities: Capability[] = [
     evidence: [agentStudy, demoWorkflow],
   },
 ];
+
+// The hero's headline figures: rounded, as in the case studies.
+export const stats = [
+  { value: "~100", label: "services migrated in waves" },
+  { value: "~150", label: "apps moved into domain namespaces" },
+  { value: "~35", label: "architecture decision records" },
+];
+
+// Each case study's runnable counterpart: a tour in the Demo repo's README.
+export const caseStudyTours: Record<string, Link> = {
+  "platform-migration-in-waves": { href: demoMigration.href, label: "Run it on two kind clusters" },
+  "ci-pipeline-guardrails": { href: demoGuardrails.href, label: "Run the policy tests, no AWS needed" },
+  "agent-assisted-delivery": { href: demoWorkflow.href, label: "See the repo built this way" },
+};

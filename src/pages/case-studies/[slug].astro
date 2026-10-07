@@ -1,6 +1,6 @@
 ---
 import { getCollection, render, type CollectionEntry } from "astro:content";
-import WithProfile from "../../layouts/WithProfile.astro";
+import Page from "../../layouts/Page.astro";
 import { profile } from "../../data/profile";
 
 // Every case study follows this shape, in this order. A case study whose
@@ -39,14 +39,14 @@ if (sections.join("|") !== SHAPE.join("|")) {
 }
 ---
 
-<WithProfile
+<Page
   title={`${data.title} · ${profile.name}`}
   description={data.summary}
   ogType="article"
   ogImage={data.ogImage && { ...data.ogImage.src, alt: data.ogImage.alt }}
 >
   <article class="page">
-    <a class="back" href="/#work">← Back to timeline</a>
+    <a class="back" href="/#proof">← All case studies</a>
 
     <header>
       <p class="eyebrow">2018–present · Case study</p>
@@ -70,7 +70,7 @@ if (sections.join("|") !== SHAPE.join("|")) {
       <p class="code-link"><a href={data.code}>Browse the code in {data.code.replace(/^https:\/\/github\.com\//, "")} →</a></p>
     </div>
   </article>
-</WithProfile>
+</Page>
 
 <style>
   .status {

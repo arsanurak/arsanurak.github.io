@@ -1,284 +1,512 @@
 ---
 import { getCollection } from "astro:content";
-import WithProfile from "../layouts/WithProfile.astro";
-import { capabilities, demoRepo, otherWork, profile, roles } from "../data/profile";
+import Base from "../layouts/Base.astro";
+import Footer from "../components/Footer.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import { capabilities, caseStudyTours, demoRepo, otherWork, profile, roles, stats } from "../data/profile";
 import { caseStudyPath } from "../lib/case-study-slugs";
 
 const caseStudies = (await getCollection("caseStudies"))
   .map(({ data }) => data)
   .sort((a, b) => a.order - b.order);
+
+// "Anurak Chatree (Ars)": the nickname is set lighter.
+const [name, nickname] = profile.name.split(/ (?=\()/);
+const [where, workMode] = profile.location.split(" · ");
+const number = (i: number) => String(i + 1).padStart(2, "0");
 ---
 
-<WithProfile title={`${profile.name} · ${profile.headline}`} description={profile.tagline}>
-  <p class="summary">{profile.summary}</p>
+<Base title={`${profile.name} · ${profile.headline}`} description={profile.tagline}>
+  <SiteHeader />
+  <main>
+    <section class="wrap hero" aria-labelledby="name">
+      <div class="intro">
+        <p class="eyebrow">{profile.headline} · {where}</p>
+        <h1 id="name">{name} {nickname && <span>{nickname}</span>}</h1>
+        <p class="tagline">{profile.tagline}</p>
+        <div class="actions">
+          <a class="button primary" href={profile.linkedin.href}>Contact on LinkedIn</a>
+          <a class="button" href={demoRepo.href}>Run the demo repo</a>
+        </div>
+        <p class="work-mode">{workMode}.</p>
+      </div>
+      <dl class="stats">
+        {
+          stats.map((stat) => (
+            <div>
+              <dt>{stat.label}</dt>
+              <dd>{stat.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
 
-  <section aria-labelledby="can-do">
-    <h2 id="can-do">What I can do</h2>
-    <ul class="capabilities">
-      {
-        capabilities.map((item) => (
-          <li>
-            <h3>{item.name}</h3>
-            <p>{item.proof}</p>
-            {item.evidence.length > 0 && (
-              <p class="evidence">
-                <span class="label">Proof</span>
-                {item.evidence.map((link) => (
-                  <a href={link.href}>{link.label}</a>
-                ))}
-              </p>
-            )}
-          </li>
-        ))
-      }
-    </ul>
-  </section>
+    <section id="can-do" class="band" aria-labelledby="can-do-h">
+      <div class="wrap section">
+        <div class="section-head">
+          <h2 id="can-do-h">What I can do</h2>
+          <p>{capabilities.length} capabilities, each with one line of proof and a link to the evidence.</p>
+        </div>
+        <ol class="capabilities">
+          {
+            capabilities.map((item, i) => (
+              <li>
+                <span class="number">{number(i)}</span>
+                <h3>{item.name}</h3>
+                <p class="proof">{item.proof}</p>
+                {item.evidence.length > 0 ? (
+                  <p class="evidence">
+                    {item.evidence.map((link) => (
+                      <a class="mono-link" href={link.href}>
+                        {link.label} →
+                      </a>
+                    ))}
+                  </p>
+                ) : (
+                  <p class="evidence internal">Internal work · happy to walk through it</p>
+                )}
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
 
-  <section aria-labelledby="work">
-    <h2 id="work">Work, newest first</h2>
-    <ol class="timeline">
-      {
-        roles.map((role) => (
-          <li class:list={["stop", { current: role.current }]}>
-            <p class="years">{role.years}</p>
-            <h3>{role.title}</h3>
-            {role.organisation && <p class="organisation">{role.organisation}</p>}
-            {role.summary && <p class="role-summary">{role.summary}</p>}
-            {role.current && (
-              <>
-                <ul class="case-studies">
-                  {caseStudies.map((study) => (
-                    <li>
-                      <p class="label kicker">Case study</p>
-                      <p class="title"><a href={caseStudyPath(study.slug)}>{study.title}</a></p>
-                      <p class="summary">{study.summary}</p>
-                    </li>
-                  ))}
-                </ul>
-                <p class="demo">
-                  The concepts behind these case studies, rebuilt as generic, runnable code:{" "}
-                  <a href={demoRepo.href}>{demoRepo.label}</a>
-                </p>
-                <h4 class="label" id="other-work">Other work</h4>
-                <ul class="other-work">
-                  {otherWork.map((item) => (
-                    <li>
-                      <strong>{item.title}.</strong> {item.description}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-          </li>
-        ))
-      }
-    </ol>
-  </section>
-</WithProfile>
+    <section id="proof" class="wrap section" aria-labelledby="proof-h">
+      <h2 id="proof-h">The proof, in depth</h2>
+      <div class="studies">
+        {
+          caseStudies.map((study) => {
+            const tour = caseStudyTours[study.slug];
+            return (
+              <article>
+                <p class="area">{study.area}</p>
+                <h3>
+                  <a href={caseStudyPath(study.slug)}>{study.title}</a>
+                </h3>
+                <p class="proof">{study.summary}</p>
+                {tour && (
+                  <a class="mono-link tour" href={tour.href}>
+                    {tour.label} →
+                  </a>
+                )}
+              </article>
+            );
+          })
+        }
+      </div>
+    </section>
+
+    <section id="work" class="ruled" aria-labelledby="work-h">
+      <div class="wrap section work">
+        <div class="work-intro">
+          <h2 id="work-h">Work</h2>
+          <p class="summary">{profile.summary}</p>
+          <p class="credentials">{profile.credentials.join(" · ")}</p>
+          <h3 class="visually-hidden">Works with</h3>
+          <ul class="skills">
+            {profile.skills.map((skill) => <li>{skill}</li>)}
+          </ul>
+        </div>
+        <ol class="timeline">
+          {
+            roles.map((role) => (
+              <li>
+                <span class="years">{role.years}</span>
+                <span class="role">
+                  <strong>{role.title}</strong>
+                  {role.organisation && <span>{role.organisation}</span>}
+                  {role.summary && <span>{role.summary}</span>}
+                </span>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    <section id="other-work" class="band" aria-labelledby="other-work-h">
+      <div class="wrap section">
+        <h2 id="other-work-h">Other work</h2>
+        <ul class="other-work">
+          {
+            otherWork.map((item) => (
+              <li>
+                <h3>{item.title}</h3>
+                <p class="proof">{item.description}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Base>
 
 <style>
-  .summary {
+  h2 {
     margin: 0;
-    font-size: 18px;
-    max-width: 62ch;
+    font-size: clamp(30px, 3.5vw, 44px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  h3 {
+    margin: 0;
+  }
+
+  .proof {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--body);
+    flex-grow: 1;
+  }
+
+  .section {
+    padding-top: 64px;
+    padding-bottom: 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .band {
+    background: var(--band);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .ruled {
+    border-top: 1px solid var(--line);
+  }
+
+  /* Hero */
+  .hero {
+    padding-top: 72px;
+    padding-bottom: 56px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+    gap: 48px;
+    align-items: end;
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .intro p {
+    margin: 0;
+  }
+
+  .eyebrow {
+    font: 500 13px/1.5 var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(44px, 7vw, 84px);
+    line-height: 0.98;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  h1 span {
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .tagline {
+    font-size: clamp(20px, 2.2vw, 26px);
+    line-height: 1.35;
+    max-width: 30ch;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 22px;
+    border: 1.5px solid var(--ink);
+    border-radius: var(--radius);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .button:hover {
+    border-color: var(--accent);
+  }
+
+  .button.primary {
+    background: var(--ink);
+    color: var(--ground);
+  }
+
+  .button.primary:hover {
+    background: var(--accent);
+    color: var(--ground);
+  }
+
+  .work-mode {
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  .stats {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 2px solid var(--ink);
+  }
+
+  .stats div {
+    padding: 20px 16px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .stats dt {
+    order: 2;
+    font-size: 14px;
+    line-height: 1.35;
+    color: var(--muted);
+  }
+
+  .stats dd {
+    order: 1;
+    margin: 0;
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  /* What I can do */
+  .section-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 32px;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .section-head p {
+    margin: 0;
+    color: var(--muted);
+    max-width: 52ch;
   }
 
   .capabilities {
     list-style: none;
-    margin: 0 0 48px;
+    margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
   }
 
   .capabilities li {
-    display: grid;
-    align-content: start;
-    gap: 6px;
-    padding: 14px 16px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-  }
-
-  .capabilities h3 {
-    font-size: 17px;
-    line-height: 1.3;
-  }
-
-  .capabilities p {
-    margin: 0;
-    color: var(--muted);
-    font-size: 14px;
-  }
-
-  .capabilities .evidence {
+    padding: 24px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
     display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 4px 12px;
-    margin-top: 4px;
+    flex-direction: column;
+    gap: 10px;
   }
 
-  .evidence .label {
+  .number {
+    font: 13px/1.4 var(--font-mono);
     color: var(--accent);
   }
 
-  h2 {
+  .capabilities h3 {
+    font-size: 20px;
+    line-height: 1.25;
+    font-weight: 700;
+  }
+
+  .evidence {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 16px;
+  }
+
+  .internal {
+    padding: 12px 0;
+    font: 13px/20px var(--font-mono);
+    color: var(--muted);
+  }
+
+  /* Case studies */
+  .studies {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 16px;
+  }
+
+  .studies article {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .area {
+    margin: 0;
+    font: 12px/1.5 var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+  }
+
+  .studies h3 {
     font-size: 22px;
-    font-weight: 600;
-    line-height: 1.2;
-    margin: 0 0 20px;
+    line-height: 1.25;
+    font-weight: 700;
+  }
+
+  .studies h3 a {
+    text-decoration-color: var(--accent-light);
+  }
+
+  .studies .tour {
+    align-self: flex-start;
+    color: var(--accent-light);
+  }
+
+  .studies a:hover {
+    color: var(--accent-light);
+  }
+
+  /* Work */
+  .work {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    gap: 40px;
+  }
+
+  .work-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .work-intro p {
+    margin: 0;
+  }
+
+  .summary {
+    line-height: 1.6;
+    color: var(--body);
+    max-width: 52ch;
+  }
+
+  .credentials {
+    font: 13px/1.6 var(--font-mono);
+    color: var(--muted);
+  }
+
+  .skills {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .skills li {
+    font: 12px/1.4 var(--font-mono);
+    color: var(--body);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 4px 8px;
   }
 
   .timeline {
     list-style: none;
-    margin: 0 0 0 6px;
-    padding: 0;
-    border-left: 2px solid var(--line);
-  }
-
-  .stop {
-    position: relative;
-    padding: 0 0 36px 28px;
-    display: grid;
-    gap: 4px;
-  }
-
-  .stop:last-child {
-    padding-bottom: 0;
-  }
-
-  .stop::before {
-    content: "";
-    position: absolute;
-    left: -8px;
-    top: 6px;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: var(--ground);
-    border: 2px solid var(--line);
-  }
-
-  .stop.current::before {
-    border-color: var(--accent);
-  }
-
-  .stop p {
     margin: 0;
+    padding: 0;
+  }
+
+  .timeline li {
+    display: grid;
+    grid-template-columns: 9.5rem minmax(0, 1fr);
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
   }
 
   .years {
-    font: 500 13px/1.6 var(--font-mono);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font: 13px/1.5 var(--font-mono);
     color: var(--accent);
+    padding-top: 3px;
     font-variant-numeric: tabular-nums;
   }
 
-  h3 {
-    font-size: 20px;
-    font-weight: 600;
-    line-height: 1.25;
-    margin: 0;
+  .role {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
   }
 
-  .organisation,
-  .role-summary {
-    color: var(--muted);
+  .role strong {
+    font-size: 17px;
+    font-weight: 700;
+  }
+
+  .role span {
     font-size: 15px;
+    color: var(--muted);
   }
 
-  .case-studies {
+  @media (max-width: 480px) {
+    .timeline li {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+  }
+
+  /* Other work */
+  .other-work {
     list-style: none;
-    margin: 12px 0 0;
+    margin: 0;
     padding: 0;
     display: grid;
-    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+    gap: 16px 40px;
   }
 
-  .case-studies li {
-    display: grid;
-    gap: 4px;
-    padding: 14px 16px;
-    background: var(--accent-soft);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
+  .other-work li {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
 
-  .kicker {
-    color: var(--accent);
-  }
-
-  .title {
-    font-size: 17px;
-    font-weight: 600;
+  .other-work h3 {
+    font-size: 18px;
     line-height: 1.3;
+    font-weight: 700;
   }
-
-  .title a {
-    color: var(--ink);
-    text-decoration-color: var(--accent);
-    text-underline-offset: 3px;
-  }
-
-  .title a:hover {
-    color: var(--accent);
-  }
-
-  /* The whole card is the link's hit area. */
-  .case-studies li {
-    position: relative;
-  }
-
-  .title a::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-  }
-
-  .title a:focus-visible {
-    outline: none;
-  }
-
-  .case-studies li:has(a:focus-visible) {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
-
-  .case-studies .summary {
-    color: var(--muted);
-    font-size: 14px;
-  }
-
-  .stop .demo {
-    margin-top: 6px;
-    color: var(--muted);
-    font-size: 14px;
-  }
-
-  .demo a {
-    font-family: var(--font-mono);
-  }
-
-  h4 {
-    color: var(--muted);
-    margin: 20px 0 4px;
-  }
-
-  .other-work {
-    margin: 0;
-    padding-left: 18px;
-    display: grid;
-    gap: 10px;
-    color: var(--muted);
-    font-size: 15px;
-  }
-
-  .other-work strong {
-    color: var(--ink);
-    font-weight: 600;
-  }
-
 </style>

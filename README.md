@@ -20,7 +20,7 @@ One command runs every check that CI runs on a pull request, apart from the Ligh
 npm run check
 ```
 
-It typechecks, runs the unit tests (check scripts and the diagram plugin), builds the site, validates every built HTML page, fails if any `<script>` element (in HTML or SVG) or JavaScript file is in the output, checks that every text colour pair meets WCAG AA contrast in both themes, checks that every published case-study slug still has a page, and checks that every page has its title, meta description, canonical URL and Open Graph tags (absolute https URLs, an image that exists in the build), that `robots.txt` allows crawling, that the sitemap lists every page, and that every internal link, image and `#anchor` in the output resolves. Last, it runs the publish guard.
+It typechecks, runs the unit tests (check scripts and the diagram plugin), builds the site, validates every built HTML page, fails if any `<script>` element (in HTML or SVG) or JavaScript file is in the output, checks that every text colour pair meets WCAG AA contrast, checks that every published case-study slug still has a page, and checks that every page has its title, meta description, canonical URL and Open Graph tags (absolute https URLs, an image that exists in the build), that `robots.txt` allows crawling, that the sitemap lists every page, and that every internal link, image and `#anchor` in the output resolves. Last, it runs the publish guard.
 
 `npm run check` is `npm run check:without-guard` followed by `npm run check:publish-guard`. CI runs the two as separate steps so that only the guard's step sees the private denylist.
 

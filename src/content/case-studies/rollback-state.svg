@@ -1,32 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 250" width="640" height="250" role="img" aria-labelledby="title">
   <title id="title">After cutover: the new platform serves traffic; the old platform keeps every workload at zero replicas with its disks, so routing can move back.</title>
   <style>
-    .ink { fill: #14202b; }
-    .muted { fill: #5b6875; }
-    .accent { fill: #0d6e7a; }
-    .box { fill: none; stroke: #d9dee3; stroke-width: 1.5; }
-    .box.live { fill: #e6f0f1; stroke: #0d6e7a; }
+    .ink { fill: #e8edf1; }
+    .muted { fill: #93a1ad; }
+    .accent { fill: #f08a5d; }
+    .box { fill: none; stroke: #22303b; stroke-width: 1.5; }
+    .box.live { fill: #15212b; stroke: #f08a5d; }
     .box.idle { stroke-dasharray: 6 4; }
-    .disk { fill: none; stroke: #5b6875; stroke-width: 1.2; }
-    .edge { fill: none; stroke: #0d6e7a; stroke-width: 1.8; }
-    .edge.back { stroke: #5b6875; stroke-dasharray: 5 4; }
-    .head { fill: #0d6e7a; }
-    .head.back { fill: #5b6875; }
-    text { font-family: "IBM Plex Sans", system-ui, sans-serif; font-size: 14px; }
-    .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; }
-    .title { font-weight: 600; font-size: 15px; }
-    @media (prefers-color-scheme: dark) {
-      .ink { fill: #e4e9ee; }
-      .muted { fill: #93a0ac; }
-      .accent { fill: #4fb6c2; }
-      .box { stroke: #26323c; }
-      .box.live { fill: #14262b; stroke: #4fb6c2; }
-      .disk { stroke: #93a0ac; }
-      .edge { stroke: #4fb6c2; }
-      .edge.back { stroke: #93a0ac; }
-      .head { fill: #4fb6c2; }
-      .head.back { fill: #93a0ac; }
-    }
+    .disk { fill: none; stroke: #93a1ad; stroke-width: 1.2; }
+    .edge { fill: none; stroke: #f08a5d; stroke-width: 1.8; }
+    .edge.back { stroke: #93a1ad; stroke-dasharray: 5 4; }
+    .head { fill: #f08a5d; }
+    .head.back { fill: #93a1ad; }
+    text { font-family: "Schibsted Grotesk", system-ui, sans-serif; font-size: 14px; }
+    .mono { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; }
+    .title { font-weight: 700; font-size: 15px; }
   </style>
 
   <!-- Routing -->

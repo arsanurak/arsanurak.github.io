@@ -1,0 +1,46 @@
+---
+import { demoRepo } from "../data/profile";
+---
+
+<header class="wrap top">
+  <a class="brand" href="/">arsanurak<span>.github.io</span></a>
+  <nav aria-label="Main">
+    <a href="/#can-do">What I can do</a>
+    <a href="/#proof">Case studies</a>
+    <a href="/#work">Work</a>
+    <a href={demoRepo.href}>Demo repo</a>
+  </nav>
+</header>
+
+<style>
+  .top {
+    padding-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 24px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .brand {
+    padding: 12px 0;
+    font: 500 14px/20px var(--font-mono);
+    text-decoration: none;
+  }
+
+  .brand span {
+    color: var(--accent);
+  }
+
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 20px;
+    font-size: 15px;
+  }
+
+  nav a {
+    padding: 12px 0;
+    line-height: 20px;
+  }
+</style>

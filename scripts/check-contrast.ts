@@ -14,14 +14,23 @@ const AA = 4.5;
 // component puts a text token on a new background token.
 export const TEXT_PAIRS: Pair[] = [
   ["ink", "ground"],
+  ["body", "ground"],
   ["muted", "ground"],
   ["accent", "ground"],
-  ["ink", "accent-soft"],
-  ["muted", "accent-soft"],
-  ["accent", "accent-soft"],
-  ["on-panel", "panel"],
-  ["panel-muted", "panel"],
-  ["panel-accent", "panel"],
+  ["ink", "band"],
+  ["body", "band"],
+  ["muted", "band"],
+  ["accent", "band"],
+  ["ink", "card"],
+  ["body", "card"],
+  ["muted", "card"],
+  ["accent", "card"],
+  ["ink", "footer"],
+  ["body", "footer"],
+  ["muted", "footer"],
+  ["accent", "footer"],
+  ["accent-light", "card"],
+  ["ground", "ink"],
 ];
 
 const DARK_BLOCK = /@media\s*\(\s*prefers-color-scheme\s*:\s*dark\s*\)\s*\{\s*:root\s*\{([^}]*)\}\s*\}/g;

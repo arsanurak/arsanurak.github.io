@@ -1,26 +1,38 @@
 ---
-import { demoRepo } from "../data/profile";
+import { demoRepo, profile } from "../data/profile";
 ---
 
 <footer>
-  <ul>
-    <li><a href="/how-this-site-is-built/">How this site is built</a></li>
-    <li><a href={demoRepo.href}>Demo code: {demoRepo.label}</a></li>
-  </ul>
-  <p>No JavaScript, no cookies, no tracking.</p>
+  <div class="wrap inner">
+    <p>{profile.name}</p>
+    <ul>
+      <li><a href={profile.linkedin.href}>LinkedIn</a></li>
+      <li><a href={demoRepo.href}>platform-demo</a></li>
+      <li><a href="/how-this-site-is-built/">How this site is built</a></li>
+    </ul>
+  </div>
 </footer>
 
 <style>
-  /* --measure and --gutter come from the page layout. */
   footer {
-    margin: 0 var(--gutter);
-    max-width: calc(var(--measure) - 2 * var(--gutter));
-    padding: 24px 0 32px;
+    background: var(--footer);
     border-top: 1px solid var(--line);
-    display: grid;
-    gap: 8px;
-    font: 13px/1.5 var(--font-mono);
-    color: var(--muted);
+    color: var(--body);
+    font-size: 14px;
+  }
+
+  .inner {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 32px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  p {
+    margin: 12px 0;
   }
 
   ul {
@@ -29,10 +41,12 @@ import { demoRepo } from "../data/profile";
     padding: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 6px 24px;
+    gap: 0 24px;
   }
 
-  p {
-    margin: 0;
+  a {
+    display: inline-block;
+    padding: 12px 0;
+    line-height: 20px;
   }
 </style>

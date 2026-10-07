@@ -1,28 +1,25 @@
 /* Colour and type tokens: defined once here and reused everywhere.
-   Light is the default; dark follows the visitor's system theme.
+   The site is dark-only.
    Exception: hand-made diagram SVGs next to a case study load as <img>, so
    they can't read these variables and repeat the hex values. Update them too
-   when a colour changes. */
+   when a colour changes (and scripts/og-image/og-default.html). */
 :root {
-  color-scheme: light dark;
+  color-scheme: dark;
 
-  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
-  --radius: 3px;
+  --font-sans: "Schibsted Grotesk", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --radius: 4px;
 
-  --ground: #f6f7f8;
-  --ink: #14202b;
-  --muted: #5b6875;
-  --line: #d9dee3;
-  --accent: #0d6e7a;
-  --accent-soft: #e6f0f1;
-
-  /* Profile column */
-  --panel: #14202b;
-  --on-panel: #eef3f6;
-  --panel-muted: #9fb0bd;
-  --panel-accent: #5fc3cf;
-  --panel-line: #2c3c49;
+  --ground: #0b1117; /* page background */
+  --band: #101820; /* alternate section background */
+  --card: #15212b; /* cards, code, quotes */
+  --footer: #070b0f;
+  --line: #22303b;
+  --ink: #e8edf1; /* headings and links */
+  --body: #b9c4cd; /* running text */
+  --muted: #93a1ad;
+  --accent: #f08a5d;
+  --accent-light: #f2a27b; /* accent text on cards */
 
   /* Diagram colours (Mermaid SVGs). Aliases, because the renderer defines
      --line, --accent and --muted on the SVG itself. */
@@ -30,19 +27,4 @@
   --diagram-accent: var(--accent);
   --diagram-muted: var(--muted);
   --diagram-border: var(--line);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ground: #0f161c;
-    --ink: #e4e9ee;
-    --muted: #93a0ac;
-    --line: #26323c;
-    --accent: #4fb6c2;
-    --accent-soft: #14262b;
-
-    --panel: #0a1015;
-    --on-panel: #e4e9ee;
-    --panel-muted: #8a99a6;
-  }
 }

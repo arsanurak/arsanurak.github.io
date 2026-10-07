@@ -36,7 +36,7 @@ const THEME = {
   accent: "var(--diagram-accent)",
   muted: "var(--diagram-muted)",
   border: "var(--diagram-border)",
-  surface: "var(--accent-soft)",
+  surface: "var(--card)",
   font: "IBM Plex Sans",
   transparent: true,
 };

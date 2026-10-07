@@ -2,16 +2,16 @@
 // Describes the pipeline as it is today. Only state what is true of the
 // merged pipeline: when a check, deploy step or dependency bot lands, add it
 // here in the same change.
-import WithProfile from "../layouts/WithProfile.astro";
+import Page from "../layouts/Page.astro";
 import { demoRepo, profile } from "../data/profile";
 ---
 
-<WithProfile
+<Page
   title={`How this site is built · ${profile.name}`}
   description="How this site is built: Astro, zero JavaScript, no cookies or tracking, and a hardened, SHA-pinned CI pipeline."
 >
   <article class="page">
-    <a class="back" href="/#work">← Back to timeline</a>
+    <a class="back" href="/">← Home</a>
 
     <header>
       <p class="eyebrow">About this site</p>
@@ -27,8 +27,8 @@ import { demoRepo, profile } from "../data/profile";
       <h2>No JavaScript, no cookies, no tracking</h2>
       <p>
         Every page is plain HTML and CSS. There is no analytics script, no tracking pixel and no cookie banner, because
-        there is nothing to consent to. The fonts (IBM Plex Sans and Mono) are served from this site, so reading a page
-        makes no requests to anyone else. The colours follow your system's light or dark theme.
+        there is nothing to consent to. The fonts (Schibsted Grotesk and JetBrains Mono) are served from this site, so reading a page
+        makes no requests to anyone else. There is one dark colour scheme.
       </p>
 
       <h2>How the content is built</h2>
@@ -66,7 +66,7 @@ import { demoRepo, profile } from "../data/profile";
         <li>Build the site, which runs the schema and section-shape checks.</li>
         <li>Validate the HTML of every built page.</li>
         <li>Fail on any <code>&lt;script&gt;</code> element, in a page or an SVG, and on any JavaScript file in the output.</li>
-        <li>Check the site's text colour pairs against WCAG AA contrast, in both themes.</li>
+        <li>Check the site's text colour pairs against WCAG AA contrast.</li>
         <li>Check that every registered case-study slug still has a page, and every page is registered.</li>
         <li>
           Check that every page has its title, description, canonical URL and Open Graph tags with absolute https URLs,
@@ -136,4 +136,4 @@ import { demoRepo, profile } from "../data/profile";
       </p>
     </div>
   </article>
-</WithProfile>
+</Page>
