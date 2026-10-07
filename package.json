@@ -16,12 +16,14 @@
     "check:no-js": "node scripts/check-no-js.ts dist",
     "check:contrast": "node scripts/check-contrast.ts dist",
     "check:slugs": "node scripts/check-slugs.ts dist",
+    "check:seo": "node scripts/check-seo.ts dist",
     "check:publish-guard": "node scripts/check-publish-guard.ts dist",
-    "check:site": "npm run typecheck && npm test && npm run build && npm run check:html && npm run check:no-js && npm run check:contrast && npm run check:slugs",
+    "check:site": "npm run typecheck && npm test && npm run build && npm run check:html && npm run check:no-js && npm run check:contrast && npm run check:slugs && npm run check:seo",
     "check": "npm run check:site && npm run check:publish-guard"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "7.3.1",
+    "@astrojs/sitemap": "3.7.4",
     "@fontsource/ibm-plex-mono": "5.3.0",
     "@fontsource/ibm-plex-sans": "5.3.0",
     "astro": "7.3.5",

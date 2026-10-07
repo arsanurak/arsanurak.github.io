@@ -20,7 +20,7 @@ One command runs every check that CI runs on a pull request:
 npm run check
 ```
 
-It typechecks, runs the unit tests (check scripts and the diagram plugin), builds the site, validates every built HTML page, fails if any `<script>` element (in HTML or SVG) or JavaScript file is in the output, checks that every text colour pair meets WCAG AA contrast in both themes, checks that every published case-study slug still has a page, and runs the publish guard.
+It typechecks, runs the unit tests (check scripts and the diagram plugin), builds the site, validates every built HTML page, fails if any `<script>` element (in HTML or SVG) or JavaScript file is in the output, checks that every text colour pair meets WCAG AA contrast in both themes, checks that every published case-study slug still has a page, and checks that every page has its title, meta description, canonical URL and Open Graph tags (absolute https URLs, an image that exists in the build), that `robots.txt` allows crawling and that the sitemap lists every page. Last, it runs the publish guard.
 
 ### Publish guard
 
@@ -40,6 +40,7 @@ The denylist is never committed. It is one term per line, with blank lines and `
 - `src/content/case-studies/`: one Markdown file per case study. The frontmatter schema is in `src/content.config.ts`, and a bad field fails the build. Sections must follow the fixed shape in `src/pages/case-studies/[slug].astro`.
 - `src/content/published-slugs.json`: every case-study slug that has been published. Slugs are permanent: add a slug when its case study goes live, and never remove or rename one.
 - `src/lib/remark-diagrams.ts`: renders ` ```mermaid alt="…" caption="…" ` blocks to inline SVG at build time, and turns a hand-made SVG or PNG on its own line (`![alt](./file.svg "caption")`) into a figure. Every diagram needs alt text. A hand-made SVG loads as an image, so it repeats the token hex values (light and dark) rather than using the CSS variables.
+- `public/`: files copied to the site as they are: `robots.txt` and `og-default.png`, the default link-preview image (1200x630). Its source is `scripts/og-image/og-default.html`; the render command is in that file. A case study can set its own with `ogImage` in its frontmatter.
 - `scripts/`: checks that run against the built site in `dist/`.
 
 `resume/` and `.publish-guard-denylist` are gitignored and must never be committed.

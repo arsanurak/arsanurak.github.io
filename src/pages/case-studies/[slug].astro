@@ -39,7 +39,12 @@ if (sections.join("|") !== SHAPE.join("|")) {
 }
 ---
 
-<WithProfile title={`${data.title} · ${profile.name}`} description={data.summary}>
+<WithProfile
+  title={`${data.title} · ${profile.name}`}
+  description={data.summary}
+  ogType="article"
+  ogImage={data.ogImage && { ...data.ogImage.src, alt: data.ogImage.alt }}
+>
   <article class="page">
     <a class="back" href="/#work">← Back to timeline</a>
 

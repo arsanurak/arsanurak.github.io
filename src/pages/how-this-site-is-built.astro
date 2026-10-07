@@ -49,6 +49,10 @@ import { demoRepo, profile } from "../data/profile";
           Case-study URLs are permanent. A committed registry lists every published slug, and renaming or removing one
           fails the checks.
         </li>
+        <li>
+          Every page carries a title, description, canonical URL and Open Graph tags, so a shared link previews with a
+          proper title and image. The build also emits a sitemap, and <code>robots.txt</code> allows crawling.
+        </li>
       </ul>
 
       <h2>Checks on every change</h2>
@@ -65,12 +69,16 @@ import { demoRepo, profile } from "../data/profile";
         <li>Check the site's text colour pairs against WCAG AA contrast, in both themes.</li>
         <li>Check that every registered case-study slug still has a page, and every page is registered.</li>
         <li>
+          Check that every page has its title, description, canonical URL and Open Graph tags with absolute https URLs,
+          that the preview image exists, and that the sitemap lists every page.
+        </li>
+        <li>
           Run a publish guard: scan every built file for terms on a private denylist, so a slip in writing is caught
           before it goes public. Matching ignores case and formatting, and a phone number is caught however it is
           written.
         </li>
       </ol>
-      <p>Checks 4 to 8 run against the built site, the same files a visitor gets, not against the source.</p>
+      <p>Checks 4 to 9 run against the built site, the same files a visitor gets, not against the source.</p>
       <p>
         The denylist itself never enters the public repo, because a list of what to hide would say what it protects.
         CI reads it from an encrypted Actions secret that only the guard's step can see, not the build, and a run
