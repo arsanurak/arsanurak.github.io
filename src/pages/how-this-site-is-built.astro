@@ -95,16 +95,36 @@ import { demoRepo, profile } from "../data/profile";
 
       <h2>The pipeline itself</h2>
       <ul>
-        <li>Every GitHub Action is pinned to a full commit SHA, with the version in a comment, so a moved tag can't change what runs.</li>
-        <li>The workflow token is read-only, and the checkout step doesn't keep its credentials.</li>
-        <li>The Node major version is pinned in one file that both local tooling and CI read.</li>
+        <li>
+          Every GitHub Action is pinned to a full commit SHA, with the version in a comment, so a moved tag can't change
+          what runs. <code>npm run check</code> fails if any workflow step isn't.
+        </li>
+        <li>
+          The workflow token is read-only, and the checkout step doesn't keep its credentials. The one exception is the
+          deploy job, which alone gets permission to publish to Pages.
+        </li>
+        <li>
+          The Node major version is pinned in one file that both local tooling and the checks read. The deploy workflow
+          names the same major version.
+        </li>
         <li>Every direct npm dependency is pinned to an exact version, and CI installs from the lockfile.</li>
         <li>
           Dependabot proposes npm and Action updates weekly, after a week-long cooldown on each new release, and keeps
           Actions pinned to SHAs. Every update goes through the same checks as any other change.
         </li>
-        <li>A newer push to the same branch cancels the older run, and every run has a time limit.</li>
+        <li>
+          A newer push to the same branch cancels the older check run, deploys run one at a time, and every job has a
+          time limit.
+        </li>
       </ul>
+
+      <h2>Deploying</h2>
+      <p>
+        Every push to <code>main</code> builds the site with <a href="https://github.com/withastro/action">Astro's
+        GitHub Action</a> and publishes it to GitHub Pages. Nothing else deploys: the workflow doesn't run for other
+        branches or pull requests, and a manual run started from any branch but <code>main</code> is skipped. Pages
+        accepts the upload through a short-lived OpenID Connect token, so there is no long-lived deploy key to leak.
+      </p>
 
       <h2>See it in code</h2>
       <p>
