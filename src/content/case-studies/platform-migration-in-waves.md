@@ -6,7 +6,7 @@ order: 1
 status: Done · in use
 area: Kubernetes, Argo CD, migration
 decision: Migrate in dependency-ordered waves, each gated by an HTTP parity check, with rollback kept until the old platform is retired.
-code: https://github.com/arsanurak/platform-demo
+code: https://github.com/arsanurak/platform-examples
 tags: [Kubernetes, Argo CD, Migration]
 ---
 
@@ -80,4 +80,4 @@ The old platform stayed at zero replicas, with its disks, until every wave had r
 
 ## See it in code
 
-The demo repo recreates this pattern from scratch on two local clusters, "old" and "new", both managed by Argo CD. It includes the wave generator, the parity check (status, headers and JSON shape), a cutover that prints its plan before acting, and a rollback that restores the old side. Nothing in it is copied from the system described here.
+The example repo shows the GitOps layout that made moving in waves practical: services grouped by business domain, one folder per service, one file per Kubernetes kind, and an Argo CD ApplicationSet that turns every service folder into an app. A layout like this is what lets a wave be defined as a set of folders. Everything in it is written fresh with generic names; nothing is copied from the system described here.

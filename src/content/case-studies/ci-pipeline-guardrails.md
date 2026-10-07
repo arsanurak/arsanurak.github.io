@@ -6,7 +6,7 @@ order: 2
 status: Done · in use
 area: AWS IAM, Terraform, GitHub Actions
 decision: One OIDC-federated execution role for every apply, capped by a permission boundary it cannot edit, in an account of its own, with guardrails asserted as tests in CI.
-code: https://github.com/arsanurak/platform-demo
+code: https://github.com/arsanurak/platform-examples
 tags: [Terraform, AWS IAM, GitHub Actions]
 ---
 
@@ -80,4 +80,4 @@ The most instructive failure came at the end. The first live run from GitHub fai
 
 ## See it in code
 
-The demo repo rebuilds this design from scratch in Terraform: an OIDC execution role, a permission boundary capping it, the GitHub OIDC trust, and guardrail policies that deny the role editing itself and lock out payment-method changes. One command runs every infrastructure check without AWS credentials, including the pytest checks on the rendered policies, and an opt-in job runs the policy-simulator matrices only when credentials exist. Nothing in it is copied from the system described here.
+The example repo shows this design in Terraform, laid out the way I structure infrastructure code: one file per concern, and one folder per IAM component holding its policy and its tests. It includes the OIDC execution role, the permission boundary, the GitHub OIDC trust and the guardrail policies that deny the role editing itself and lock out payment-method changes. One command runs every check without AWS credentials, including the tests on the rendered policies. Nothing in it is copied from the system described here.

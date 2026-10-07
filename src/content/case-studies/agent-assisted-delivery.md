@@ -6,7 +6,7 @@ order: 3
 status: In use · evolving
 area: AI coding agents, workflow, guardrails
 decision: Keep decisions human and recorded, give the agent only well-specified tickets, enforce hard limits with hooks, and review every change in a pull request.
-code: https://github.com/arsanurak/platform-demo
+code: https://github.com/arsanurak/platform-examples
 tags: [Claude Code, ADRs, Workflow]
 ---
 
@@ -84,4 +84,4 @@ The hooks turn the boundaries from instructions into rules. The agent doesn't ha
 
 ## See it in code
 
-The demo repo is being built in public with this workflow: its own glossary and decision records, triage-labelled issues, a map of open questions, and pull requests co-authored by the agent and reviewed before merging. Its agent configuration, including the secret-blocking and command-guard hooks, is committed so the limits can be inspected.
+The example repo was built in public with this workflow: its own glossary and decision records, triage-labelled issues, a map of open questions, and pull requests co-authored by the agent and reviewed before merging. Its agent configuration, including the secret-blocking and command-guard hooks, is committed so the limits can be inspected.

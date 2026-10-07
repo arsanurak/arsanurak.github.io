@@ -103,10 +103,10 @@ export const roles: Role[] = [
   },
 ];
 
-// The public Demo repo: the case-study concepts rebuilt as generic, runnable code.
+// The public example repo: infrastructure and GitOps config in my house style.
 export const demoRepo: Link = {
-  href: "https://github.com/arsanurak/platform-demo",
-  label: "arsanurak/platform-demo",
+  href: "https://github.com/arsanurak/platform-examples",
+  label: "arsanurak/platform-examples",
 };
 
 export interface Capability {
@@ -131,10 +131,10 @@ const agentStudy: Link = {
 const otherWorkLink: Link = { href: "#other-work", label: "Other work" };
 const siteBuild: Link = { href: "/how-this-site-is-built/", label: "How this site is built" };
 const timeline: Link = { href: "#work", label: "Work history" };
-const demo = "https://github.com/arsanurak/platform-demo";
-const demoMigration: Link = { href: `${demo}#tour-1-migrate-in-waves`, label: "Runnable demo" };
-const demoGuardrails: Link = { href: `${demo}#tour-2-guardrails-without-credentials`, label: "Terraform demo" };
-const demoWorkflow: Link = { href: `${demo}#tour-3-how-this-repo-was-built`, label: "Built in public" };
+const demo = "https://github.com/arsanurak/platform-examples";
+const demoMigration: Link = { href: `${demo}/tree/main/gitops`, label: "GitOps layout" };
+const demoGuardrails: Link = { href: `${demo}/tree/main/iac/stage`, label: "IaC layout" };
+const demoWorkflow: Link = { href: `${demo}/pulls?q=is%3Apr+is%3Aclosed`, label: "Built in public" };
 
 // "What I can do": capabilities in the words job posts use, each with one line of proof.
 // Every line is confirmed by Ars before it ships.
@@ -217,9 +217,9 @@ export const stats = [
   { value: "~35", label: "architecture decision records" },
 ];
 
-// Each case study's runnable counterpart: a tour in the Demo repo's README.
+// Each case study's counterpart in the example repo.
 export const caseStudyTours: Record<string, Link> = {
-  "platform-migration-in-waves": { href: demoMigration.href, label: "Run it on two kind clusters" },
-  "ci-pipeline-guardrails": { href: demoGuardrails.href, label: "Run the policy tests, no AWS needed" },
-  "agent-assisted-delivery": { href: demoWorkflow.href, label: "See the repo built this way" },
+  "platform-migration-in-waves": { href: demoMigration.href, label: "See the GitOps layout" },
+  "ci-pipeline-guardrails": { href: demoGuardrails.href, label: "See the IaC layout and policy tests" },
+  "agent-assisted-delivery": { href: demoWorkflow.href, label: "See the pull requests" },
 };
