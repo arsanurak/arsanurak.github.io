@@ -20,7 +20,16 @@ One command runs every check that CI runs on a pull request:
 npm run check
 ```
 
-It typechecks, runs the unit tests (check scripts and the diagram plugin), builds the site, validates every built HTML page, fails if any `<script>` element (in HTML or SVG) or JavaScript file is in the output, checks that every text colour pair meets WCAG AA contrast in both themes, and checks that every published case-study slug still has a page.
+It typechecks, runs the unit tests (check scripts and the diagram plugin), builds the site, validates every built HTML page, fails if any `<script>` element (in HTML or SVG) or JavaScript file is in the output, checks that every text colour pair meets WCAG AA contrast in both themes, checks that every published case-study slug still has a page, and runs the publish guard.
+
+### Publish guard
+
+The publish guard scans every file in `dist/` for terms on a private denylist and fails on any match. It reports the file and the entry number, never the term. Matching ignores case, decoded HTML entities and line wrapping. A line made only of digits and phone punctuation (at least 7 digits) is a phone number, and matches with or without spaces, dashes, brackets, a leading 0 or a country code.
+
+The denylist is never committed. It is one term per line, with blank lines and `#` comments ignored. Write a phone number in national form (`012 345 6789`), or in international form with a space after the country code (`+00 12 345 6789`).
+
+- **Locally:** put the list in `.publish-guard-denylist` at the repo root (gitignored). Without it, `npm run check` warns and skips the scan.
+- **In CI:** the list is the `PUBLISH_GUARD_DENYLIST` Actions secret (repository settings, Secrets and variables, Actions), in the same format. Only the guard's own step sees it, not the build. Without it the run fails, except on pull requests that get no Actions secrets (forks and Dependabot), where it warns; the guard runs again with the list on `main`.
 
 ## Layout
 
@@ -33,4 +42,4 @@ It typechecks, runs the unit tests (check scripts and the diagram plugin), build
 - `src/lib/remark-diagrams.ts`: renders ` ```mermaid alt="…" caption="…" ` blocks to inline SVG at build time, and turns a hand-made SVG or PNG on its own line (`![alt](./file.svg "caption")`) into a figure. Every diagram needs alt text. A hand-made SVG loads as an image, so it repeats the token hex values (light and dark) rather than using the CSS variables.
 - `scripts/`: checks that run against the built site in `dist/`.
 
-`resume/` is gitignored and must never be committed.
+`resume/` and `.publish-guard-denylist` are gitignored and must never be committed.

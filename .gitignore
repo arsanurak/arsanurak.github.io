@@ -1,6 +1,9 @@
 # Private resume files: never commit (they hold the phone number)
 resume/
 
+# Publish guard denylist: never commit (see README)
+.publish-guard-denylist
+
 # Dependencies and build output
 node_modules/
 dist/
