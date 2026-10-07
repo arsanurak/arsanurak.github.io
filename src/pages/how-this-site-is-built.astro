@@ -49,6 +49,10 @@ import { demoRepo, profile } from "../data/profile";
           Case-study URLs are permanent. A committed registry lists every published slug, and renaming or removing one
           fails the checks.
         </li>
+        <li>
+          Every page carries a title, description, canonical URL and Open Graph tags, so a shared link previews with a
+          proper title and image. The build also emits a sitemap, and <code>robots.txt</code> allows crawling.
+        </li>
       </ul>
 
       <h2>Checks on every change</h2>
@@ -64,15 +68,30 @@ import { demoRepo, profile } from "../data/profile";
         <li>Fail on any <code>&lt;script&gt;</code> element, in a page or an SVG, and on any JavaScript file in the output.</li>
         <li>Check the site's text colour pairs against WCAG AA contrast, in both themes.</li>
         <li>Check that every registered case-study slug still has a page, and every page is registered.</li>
+        <li>
+          Check that every page has its title, description, canonical URL and Open Graph tags with absolute https URLs,
+          that the preview image exists, and that the sitemap lists every page.
+        </li>
         <li>Check that every internal link, image and anchor points at a page, file or heading that exists.</li>
+        <li>
+          Run a publish guard: scan every built file for terms on a private denylist, so a slip in writing is caught
+          before it goes public. Matching ignores case and formatting, and a phone number is caught however it is
+          written.
+        </li>
       </ol>
+      <p>Checks 4 to 10 run against the built site, the same files a visitor gets, not against the source.</p>
       <p>
-        After those, CI runs <a href="https://github.com/GoogleChrome/lighthouse-ci">Lighthouse CI</a> on every built
-        page, three times each, and fails if the median performance score is below 0.95 or the median accessibility score is
-        below 1.0. The thresholds are committed with the code, and <code>npm run lighthouse</code> runs the same audit
-        locally.
+        The denylist itself never enters the public repo, because a list of what to hide would say what it protects.
+        CI reads it from an encrypted Actions secret that only the guard's step can see, not the build, and a run
+        without it fails rather than passing unchecked. A failure names the file, never the matching term, so the log
+        doesn't leak it either. Locally the same check reads a gitignored file.
       </p>
-      <p>Checks 4 to 8 and the Lighthouse audit run against the built site, the same files a visitor gets, not against the source.</p>
+      <p>
+        After those ten checks, CI also runs <a href="https://github.com/GoogleChrome/lighthouse-ci">Lighthouse CI</a> on every built
+        page, three times each, and fails if the median performance score is below 0.95 or the median accessibility
+        score is below 1.0. The thresholds are committed with the code, and <code>npm run lighthouse</code> runs the
+        same audit locally. Like checks 4 to 10, it runs against the built site.
+      </p>
 
       <h2>The pipeline itself</h2>
       <ul>

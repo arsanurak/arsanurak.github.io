@@ -22,7 +22,9 @@ const caseStudies = defineCollection({
         decision: z.string().min(1),
         code: z.url(),
         tags: z.array(z.string().min(1)).min(1),
-        ogImage: image().optional(),
+        // Optional link-preview image, next to the Markdown file; the site
+        // default is used otherwise. 1200x630 suits most previews.
+        ogImage: z.object({ src: image(), alt: z.string().min(1) }).strict().optional(),
       })
       .strict(),
 });
