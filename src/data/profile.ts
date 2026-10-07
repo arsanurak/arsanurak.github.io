@@ -19,7 +19,6 @@ export const profile = {
   summary:
     "Since 2022 I've built and run production Kubernetes platforms: AWS EKS and Linode LKE, delivered through GitOps with Argo CD, with every major infrastructure choice recorded as an Architecture Decision Record. Before Kubernetes I spent over a decade designing Cisco networks, so service mesh, ingress, DNS and VPN problems are where I'm most useful. I've led small infrastructure teams, own disaster recovery planning, and use AI coding agents for incident diagnosis and PR review.",
   location: "Chiang Mai, Thailand (UTC+7) · Remote, or hybrid in Bangkok",
-  email: "ars.astore@gmail.com",
   linkedin,
   skills: [
     "Kubernetes",
