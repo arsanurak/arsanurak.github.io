@@ -83,10 +83,15 @@ export const roles: Role[] = [
   },
   {
     years: "2012–2018",
-    title: "Systems & Network Engineer",
+    title: "Network Engineer",
     organisation: "Software company, Chiang Mai",
     summary:
       "Ran systems and networks: monitoring for mail, Wi-Fi and LAN; network builds for new buildings; fault tolerance and backups.",
+  },
+  {
+    years: "2010–2012",
+    title: "Self-employed",
+    organisation: "Own business, Chiang Mai",
   },
   {
     years: "2005–2010",
