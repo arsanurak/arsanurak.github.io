@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import WithProfile from "../layouts/WithProfile.astro";
-import { demoRepo, otherWork, profile, roles } from "../data/profile";
+import { capabilities, demoRepo, otherWork, profile, roles } from "../data/profile";
 import { caseStudyPath } from "../lib/case-study-slugs";
 
 const caseStudies = (await getCollection("caseStudies"))
@@ -11,6 +11,28 @@ const caseStudies = (await getCollection("caseStudies"))
 
 <WithProfile title={`${profile.name} · ${profile.headline}`} description={profile.tagline}>
   <p class="summary">{profile.summary}</p>
+
+  <section aria-labelledby="can-do">
+    <h2 id="can-do">What I can do</h2>
+    <ul class="capabilities">
+      {
+        capabilities.map((item) => (
+          <li>
+            <h3>{item.name}</h3>
+            <p>{item.proof}</p>
+            {item.evidence.length > 0 && (
+              <p class="evidence">
+                <span class="label">Proof</span>
+                {item.evidence.map((link) => (
+                  <a href={link.href}>{link.label}</a>
+                ))}
+              </p>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </section>
 
   <section aria-labelledby="work">
     <h2 id="work">Work, newest first</h2>
@@ -37,7 +59,7 @@ const caseStudies = (await getCollection("caseStudies"))
                   The concepts behind these case studies, rebuilt as generic, runnable code:{" "}
                   <a href={demoRepo.href}>{demoRepo.label}</a>
                 </p>
-                <h4 class="label">Other work</h4>
+                <h4 class="label" id="other-work">Other work</h4>
                 <ul class="other-work">
                   {otherWork.map((item) => (
                     <li>
@@ -59,6 +81,47 @@ const caseStudies = (await getCollection("caseStudies"))
     margin: 0;
     font-size: 18px;
     max-width: 62ch;
+  }
+
+  .capabilities {
+    list-style: none;
+    margin: 0 0 48px;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 12px;
+  }
+
+  .capabilities li {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .capabilities h3 {
+    font-size: 17px;
+    line-height: 1.3;
+  }
+
+  .capabilities p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .capabilities .evidence {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 12px;
+    margin-top: 4px;
+  }
+
+  .evidence .label {
+    color: var(--accent);
   }
 
   h2 {
