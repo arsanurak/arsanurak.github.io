@@ -22,7 +22,7 @@
     "check:pinned-actions": "node scripts/check-pinned-actions.ts .github/workflows",
     "check:without-guard": "npm run check:pinned-actions && npm run typecheck && npm test && npm run build && npm run check:html && npm run check:no-js && npm run check:contrast && npm run check:slugs && npm run check:seo && npm run check:links",
     "check": "npm run check:without-guard && npm run check:publish-guard",
-    "lighthouse": "lhci autorun"
+    "lighthouse": "lhci autorun; status=$?; node scripts/lighthouse-summary.ts; exit $status"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "7.3.1",
