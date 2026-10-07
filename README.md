@@ -14,13 +14,23 @@ npm run dev
 
 ## Check
 
-One command runs every check that CI runs on a pull request:
+One command runs every check that CI runs on a pull request, apart from the Lighthouse budget below:
 
 ```sh
 npm run check
 ```
 
-It typechecks, runs the unit tests (check scripts and the diagram plugin), builds the site, validates every built HTML page, fails if any `<script>` element (in HTML or SVG) or JavaScript file is in the output, checks that every text colour pair meets WCAG AA contrast in both themes, checks that every published case-study slug still has a page, and checks that every page has its title, meta description, canonical URL and Open Graph tags (absolute https URLs, an image that exists in the build), that `robots.txt` allows crawling and that the sitemap lists every page. Last, it runs the publish guard.
+It typechecks, runs the unit tests (check scripts and the diagram plugin), builds the site, validates every built HTML page, fails if any `<script>` element (in HTML or SVG) or JavaScript file is in the output, checks that every text colour pair meets WCAG AA contrast in both themes, checks that every published case-study slug still has a page, and checks that every page has its title, meta description, canonical URL and Open Graph tags (absolute https URLs, an image that exists in the build), that `robots.txt` allows crawling, that the sitemap lists every page, and that every internal link, image and `#anchor` in the output resolves. Last, it runs the publish guard.
+
+### Lighthouse budget
+
+CI also runs a Lighthouse budget on every built page. It needs Chrome, so it is a separate command (run `npm run check` first to build):
+
+```sh
+npm run lighthouse
+```
+
+It audits each page three times and fails if the median performance score is below 0.95 or the median accessibility score is below 1.0. The thresholds live in `lighthouserc.json`, and reports land in the gitignored `.lighthouseci/`. If Chrome isn't found, point `CHROME_PATH` at it.
 
 ### Publish guard
 
@@ -30,6 +40,10 @@ The denylist is never committed. It is one term per line, with blank lines and `
 
 - **Locally:** put the list in `.publish-guard-denylist` at the repo root (gitignored). Without it, `npm run check` warns and skips the scan.
 - **In CI:** the list is the `PUBLISH_GUARD_DENYLIST` Actions secret (repository settings, Secrets and variables, Actions), in the same format. Only the guard's own step sees it, not the build. Without it the run fails, except on pull requests that get no Actions secrets (forks and Dependabot), where it warns; the guard runs again with the list on `main`.
+
+### Dependency updates
+
+Dependabot (`.github/dependabot.yml`) opens weekly update PRs for npm packages and the SHA-pinned Actions, waiting 7 days after each release and grouping minor and patch bumps. Its PRs run the same checks, with the publish guard in warn-only mode because Dependabot PRs get no Actions secrets.
 
 ## Layout
 

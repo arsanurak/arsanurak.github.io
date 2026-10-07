@@ -8,3 +8,6 @@ resume/
 node_modules/
 dist/
 .astro/
+
+# Lighthouse CI results
+.lighthouseci/

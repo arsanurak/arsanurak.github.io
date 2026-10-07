@@ -15,7 +15,7 @@ concurrency:
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -37,3 +37,7 @@ jobs:
         env:
           PUBLISH_GUARD_DENYLIST: ${{ secrets.PUBLISH_GUARD_DENYLIST }}
           PUBLISH_GUARD_NO_SECRETS: ${{ github.event_name == 'pull_request' && (github.event.pull_request.head.repo.fork || github.event.pull_request.user.login == 'dependabot[bot]') }}
+
+      # Lighthouse performance and accessibility budget on every built page,
+      # using the runner's preinstalled Chrome. Thresholds: lighthouserc.json
+      - run: npm run lighthouse
