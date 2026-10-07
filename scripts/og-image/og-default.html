@@ -1,0 +1,99 @@
+<!doctype html>
+<!--
+  Source of public/og-default.png, the site's default link-preview image
+  (1200x630). Colours are the profile-column tokens from src/styles/tokens.css,
+  repeated here because this page is rendered on its own. After a change,
+  re-render from the repo root:
+
+  chromium --headless --disable-gpu --hide-scrollbars --force-device-scale-factor=1 \
+    --window-size=1200,630 --screenshot=public/og-default.png scripts/og-image/og-default.html
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Default link-preview image</title>
+    <style>
+      @font-face {
+        font-family: "IBM Plex Sans";
+        font-weight: 400;
+        src: url("../../node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "IBM Plex Sans";
+        font-weight: 600;
+        src: url("../../node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "IBM Plex Mono";
+        font-weight: 400;
+        src: url("../../node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2") format("woff2");
+      }
+
+      html,
+      body {
+        margin: 0;
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+      }
+
+      body {
+        box-sizing: border-box;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        padding: 72px 88px 64px;
+        background: #14202b; /* --panel */
+        color: #eef3f6; /* --on-panel */
+        font-family: "IBM Plex Sans", sans-serif;
+        border-left: 12px solid #5fc3cf; /* --panel-accent */
+      }
+
+      .label,
+      .tags {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 26px;
+        letter-spacing: 0.02em;
+        color: #5fc3cf; /* --panel-accent */
+        margin: 0;
+      }
+
+      .main {
+        align-self: center;
+      }
+
+      h1 {
+        font-size: 76px;
+        font-weight: 600;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+        margin: 0 0 20px;
+      }
+
+      .headline {
+        font-size: 40px;
+        margin: 0 0 18px;
+      }
+
+      .tagline {
+        font-size: 30px;
+        color: #9fb0bd; /* --panel-muted */
+        margin: 0;
+      }
+
+      .tags {
+        padding-top: 28px;
+        border-top: 2px solid #2c3c49; /* --panel-line */
+        color: #9fb0bd;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="label">arsanurak.github.io</p>
+    <div class="main">
+      <h1>Anurak Chatree (Ars)</h1>
+      <p class="headline">Senior Platform &amp; DevOps Engineer</p>
+      <p class="tagline">Kubernetes, GitOps and AWS, debugged from the network layer up.</p>
+    </div>
+    <p class="tags">Case studies · Kubernetes · GitOps · AWS · Networking</p>
+  </body>
+</html>
