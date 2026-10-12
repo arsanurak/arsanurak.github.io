@@ -14,6 +14,14 @@ updates:
       # Minor and patch bumps in one PR; majors get their own.
       npm-minor-and-patch:
         update-types: ["minor", "patch"]
+    ignore:
+      # @astrojs/check (npm run typecheck) supports TypeScript 5 and 6 only.
+      # Lift this once it accepts TypeScript 7.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      # Node's types follow the Node major in mise.toml (24). Bump both together.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
