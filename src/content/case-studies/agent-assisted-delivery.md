@@ -84,4 +84,4 @@ The hooks turn the boundaries from instructions into rules. The agent doesn't ha
 
 ## See it in code
 
-The example repo was built in public with this workflow: its own glossary and decision records, triage-labelled issues, a map of open questions, and pull requests co-authored by the agent and reviewed before merging. Its agent configuration, including the secret-blocking and command-guard hooks, is committed so the limits can be inspected.
+The example repo was built in public with this workflow: its own glossary and decision records, triage-labelled issues, a map of open questions, and pull requests co-authored by the agent, each one a ticket. Its agent configuration, including the secret-blocking and command-guard hooks, is committed so the limits can be inspected.

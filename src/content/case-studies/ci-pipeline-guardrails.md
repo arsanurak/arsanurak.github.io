@@ -80,4 +80,4 @@ The most instructive failure came at the end. The first live run from GitHub fai
 
 ## See it in code
 
-The example repo shows this design in Terraform, laid out the way I structure infrastructure code: one file per concern, and one folder per IAM component holding its policy and its tests. It includes the OIDC execution role, the permission boundary, the GitHub OIDC trust and the guardrail policies that deny the role editing itself and lock out payment-method changes. One command runs every check without AWS credentials, including the tests on the rendered policies. Nothing in it is copied from the system described here.
+The example repo shows this design in Terraform, laid out the way I structure infrastructure code: one file per concern, and one folder per IAM component holding its policy and its tests. It includes the OIDC execution role, the permission boundary, the GitHub OIDC trust and the guardrail policies that deny the role editing itself and lock out payment-method changes. One command runs every check without AWS credentials, including the tests on the policy JSON. Nothing in it is copied from the system described here.
