@@ -31,7 +31,7 @@ jobs:
       # that Checks would fail. Keep the two in step: change one, change both.
 
       # Installs the Node version pinned in mise.toml
-      - uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
+      - uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
 
       # Installs exactly what package-lock.json lists
       - run: npm ci
